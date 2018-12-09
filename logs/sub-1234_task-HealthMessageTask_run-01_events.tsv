@@ -1,0 +1,7 @@
+onset	duration	trial	trial_type	rating	resp_time	valence	s_ns	id
+10.038288116455078	3	1	iti	7	1.293	negative	social	neg_soc_404
+13.038949012756348	8	1	message	7	1.293	negative	social	neg_soc_404
+21.039404153823853	5	1	rating	7	1.293	negative	social	neg_soc_404
+26.076173067092896	2	2	iti	3	0.915	negative	nonsocial	neg_nonsoc_214
+28.089104175567627	8	2	message	3	0.915	negative	nonsocial	neg_nonsoc_214
+36.08950901031494	5	2	rating	3	0.915	negative	nonsocial	neg_nonsoc_214

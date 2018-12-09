@@ -1,0 +1,16 @@
+onset	duration	trial	trial_type	rating	resp_time	valence	s_ns	id
+10.063943862915039	3	1	iti	8	2.26	positive	social	pos_soc_312
+13.066417932510376	8	1	message	8	2.26	positive	social	pos_soc_312
+21.083545923233032	5	1	rating	8	2.26	positive	social	pos_soc_312
+26.12229299545288	3	2	iti	3	2.184	negative	nonsocial	neg_nonsoc_219
+29.133278846740723	8	2	message	3	2.184	negative	nonsocial	neg_nonsoc_219
+37.13371682167053	5	2	rating	3	2.184	negative	nonsocial	neg_nonsoc_219
+42.166932821273804	3	3	iti	7	3.466	negative	nonsocial	neg_nonsoc_216
+45.18277883529663	8	3	message	7	3.466	negative	nonsocial	neg_nonsoc_216
+53.18381094932556	5	3	rating	7	3.466	negative	nonsocial	neg_nonsoc_216
+58.21790289878845	3	4	iti	2	2.366	positive	nonsocial	pos_nonsoc_119
+61.23375391960144	8	4	message	2	2.366	positive	nonsocial	pos_nonsoc_119
+69.25061798095703	5	4	rating	2	2.366	positive	nonsocial	pos_nonsoc_119
+74.27913093566895	3	5	iti	7	1.7	negative	nonsocial	neg_nonsoc_213
+77.28384399414062	8	5	message	7	1.7	negative	nonsocial	neg_nonsoc_213
+85.28422498703003	5	5	rating	7	1.7	negative	nonsocial	neg_nonsoc_213
