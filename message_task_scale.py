@@ -250,8 +250,8 @@ def do_run(run_number, trials):
         ##audio_noPath = "%s_%s_%s.wav" % (theme, trial_type, cond)
         ##audio = os.path.join('audio', audio_noPath)
 
-        message = trial['message']  ## If quotes desired
-        ##message = trial['message'].strip('"')  ## If quotes not desired
+        ##message = trial['message']  ## If quotes desired
+        message = trial['message'].strip('"')  ## If quotes not desired
 
         ##pictureStim.setImage(image)
         messageStim.setText(message)
@@ -341,6 +341,7 @@ def do_run(run_number, trials):
 
     drawThanks()
     win.flip()
+    core.wait(3)
 
 
     # --------- Write log files ---------
@@ -358,9 +359,8 @@ def do_run(run_number, trials):
     ##trials.saveAsText(log_filename2, delim=',', dataOut=('n', 'all_raw'))
     ##trials.saveAsText(log_filename2, delim=',', dataOut=['resp_onset_raw', 'resp_raw', 'rt_raw', 'stim_onset_raw', 'order_raw'])
 
-    # Wait for key press
-    event.waitKeys(keyList=('space'))
-
+    # Quit
+    core.quit()
 
 
 # ==================================
