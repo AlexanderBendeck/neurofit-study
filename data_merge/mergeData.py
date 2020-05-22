@@ -31,8 +31,14 @@ import numpy as np
 import os
 
 def safeDateConvert(val, verbose=False):
+    '''
+    Takes dates/times from surveys and SMS data
+    (in the format 2020-04-08 11:32:50)
+    and returns just the date (i.e. 2020-04-08);
+    returns N/A if missing or invalid date
+    '''
     if isinstance(val, str):
-        if ":" in val: ## If a valid date
+        if ":" in val: ## If a valid date/time
             return val.split()[0]
     else:
         if verbose:
@@ -81,6 +87,7 @@ def mergeFilesForUser(uid, write_csv=False):
     path_to_data = os.path.join("data_raw", "")
     
     fitabase_files = [f for f in os.listdir(path_to_data) if f.startswith(uid)]
+    #print(uid, fitabase_files)
     activityFile = [f for f in fitabase_files if "Activity" in f][0]
     sleepFile = [f for f in fitabase_files if "sleep" in f][0]
     
@@ -106,8 +113,11 @@ def mergeFilesForUser(uid, write_csv=False):
     smsData = pd.read_csv(path_to_data + "sub-" + uid + "_sms-times.csv") 
     smsData.rename(columns={'Unnamed: 0':'subj_day_num'}, inplace=True)
     smsData['subj_day_num'] = smsData['subj_day_num'].apply(lambda x: x+1)
-    smsData['SmsDate'] = smsData['timestamp'].apply(lambda x: x.split()[0])
-    
+    #smsDates = smsData['timestamp'].apply(lambda x: x.split()[0])
+    smsDates = smsData['timestamp'].apply(safeDateConvert)
+    smsDatesClean = smsDates[smsDates != "N/A"]
+    smsData['SmsDate'] = smsDatesClean
+
     # Merge survey and SMS rows on date
     act_SMS = pd.merge(act_sleep, smsData, how='left', left_on='ActivityDate', right_on='SmsDate')
     #act_SMS = pd.merge(act_sleep, smsData, left_on='ActivityDate', right_on='SmsDate')
@@ -119,10 +129,16 @@ def mergeFilesForUser(uid, write_csv=False):
     act_SMS = act_SMS[['subj_day_num']+cols]
     
     # Find combined survey data file, load dataframe, and throw out survey timestamp (keep date)
-    surveyData = pd.read_csv(path_to_data + "DailySurveys_DATA_2020-04-09_2143.csv") 
+    surveyFiles = [f for f in os.listdir(path_to_data) if f.startswith("DailySurveys")]
+    if len(surveyFiles) == 0:
+        print("DailySurveys file not found. Make sure the file name starts with: 'DailySurveys'" + "\n")
+        return
+    elif len(surveyFiles) > 1:
+        print(str(len(surveyFiles)) + " DailySurveys files found. Using file: " + surveyFiles[0] + "\n")
+    surveyData = pd.read_csv(path_to_data + surveyFiles[0]) 
     #print(surveyData.shape)
     #print(surveyData.loc(surveyData['daily_survey_timestamp'] == 'str'))
-    surveyDates = surveyData['daily_survey_timestamp'].apply(lambda x: safeDateConvert(x))
+    surveyDates = surveyData['daily_survey_timestamp'].apply(safeDateConvert)
     surveyDatesClean = surveyDates[surveyDates != "N/A"]
     
     surveyData['SurveyDate'] = surveyDatesClean
@@ -216,7 +232,11 @@ def getCombinedFile(uids):
     '''
     dataframes = []
     for uid in uids:
-        dataframes.append(mergeFilesForUser(uid, write_csv = False))
+        df = mergeFilesForUser(uid, write_csv = False)
+        if df is None:  ## Something went wrong
+            print("mergeFilesForUser returned empty dataframe; script aborted")
+            return
+        dataframes.append(df)            
     allInOne = pd.concat(dataframes)
     allInOne = allInOne.sort_values(by=['sub', 'ActivityDate'])
     pd.DataFrame.to_csv(allInOne, os.path.join("data_clean" ,"final_merged_data_all_norm.csv"), index=False)
@@ -232,11 +252,14 @@ def getSeparateFiles(uids):
 if __name__ == "__main__":
     path_to_data = os.path.join("data_raw", "")
     
-    # Only run for subjects where we have both SMS and fMRI data
+    # Only run for subjects where we have activity, SMS, and fMRI data
+    uids_activity = [f[0:4] for f in os.listdir(path_to_data) if 'Activity' in f]
     uids_sms = [f[4:8] for f in os.listdir(path_to_data) if 'sms-times' in f]
     uids_fmri = [f[4:8] for f in os.listdir(path_to_data) if 'HealthMessage' in f]
-    uids = sorted(set(uids_sms) & set(uids_fmri), key = lambda x: int(x))
-    uids = ['1101']
+    
+    uids = sorted(set(uids_sms) & set(uids_fmri) & set(uids_activity), key = lambda x: int(x))
+    uids = ['1011', '1105']
+    
     # Output separate files for these subjects
-    #getSeparateFiles(uids)
+    getSeparateFiles(uids)
     getCombinedFile(uids)
