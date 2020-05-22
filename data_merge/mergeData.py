@@ -30,6 +30,15 @@ import pandas as pd
 import numpy as np
 import os
 
+def safeDateConvert(val, verbose=False):
+    if isinstance(val, str):
+        if ":" in val: ## If a valid date
+            return val.split()[0]
+    else:
+        if verbose:
+            print(val)  ## What is val if not a string?
+    return "N/A"  ## If not a valid date (not string, or string but not date)
+
 def formatDate(date):
     '''
     Re-formats dates from daily activity
@@ -111,7 +120,12 @@ def mergeFilesForUser(uid, write_csv=False):
     
     # Find combined survey data file, load dataframe, and throw out survey timestamp (keep date)
     surveyData = pd.read_csv(path_to_data + "DailySurveys_DATA_2020-04-09_2143.csv") 
-    surveyData['SurveyDate'] = surveyData['daily_survey_timestamp'].apply(lambda x: x.split()[0])
+    #print(surveyData.shape)
+    #print(surveyData.loc(surveyData['daily_survey_timestamp'] == 'str'))
+    surveyDates = surveyData['daily_survey_timestamp'].apply(lambda x: safeDateConvert(x))
+    surveyDatesClean = surveyDates[surveyDates != "N/A"]
+    
+    surveyData['SurveyDate'] = surveyDatesClean
     
     # Find this user's rows in the survey dataframe and store in new dataframe
     surveyDataForUser = surveyData.loc[surveyData['subject_id'] == int(uid)]
@@ -146,7 +160,7 @@ def mergeFilesForUser(uid, write_csv=False):
     #print(runs['id'])
     final_merged = pd.merge(act_SMS_surveys, runs, how='left', left_on=['msg_id'], right_on=['id'])
     #pd.DataFrame.to_csv(runs, "test_sleep2.csv", index=False)
-    pd.DataFrame.to_csv(final_merged , "test_sleep.csv", index=False)
+    #pd.DataFrame.to_csv(final_merged , "test_sleep.csv", index=False)
     #print(act_SMS_surveys)
     # Normalize TotalSteps and RestingHeartRate
     totSteps = final_merged['TotalSteps'].apply(lambda x: int(x) if x != "NA" else np.NaN)
@@ -222,7 +236,7 @@ if __name__ == "__main__":
     uids_sms = [f[4:8] for f in os.listdir(path_to_data) if 'sms-times' in f]
     uids_fmri = [f[4:8] for f in os.listdir(path_to_data) if 'HealthMessage' in f]
     uids = sorted(set(uids_sms) & set(uids_fmri), key = lambda x: int(x))
-    uids = ['1007','1010','1011','1019','1023','1027','1039','1040','1044','1046','1071']
+    uids = ['1101']
     # Output separate files for these subjects
     #getSeparateFiles(uids)
     getCombinedFile(uids)
