@@ -32,7 +32,7 @@ import os
 
 def safeDateConvert(val, verbose=False):
     '''
-    Takes dates/times from surveys and SMS data
+    Takes dates/times from surveys, SMS, & sleep data
     (in the format 2020-04-08 11:32:50)
     and returns just the date (i.e. 2020-04-08);
     returns N/A if missing or invalid date
@@ -98,7 +98,7 @@ def mergeFilesForUser(uid, write_csv=False):
 
 
     sleepLog = pd.read_csv(path_to_data + sleepFile)
-    sleepLog['DateToFormat'] = sleepLog['SleepDay'].apply(lambda x: x.split()[0])
+    sleepLog['DateToFormat'] = sleepLog['SleepDay'].apply(safeDateConvert)
     sleepLog['DateToMerge'] = sleepLog['DateToFormat'].apply(formatDate)
     #print(sleepLog['DateToMerge'])
     
