@@ -225,14 +225,18 @@ def mergeFilesForUser(uid, write_csv=False):
     # Return the final merged dataframe
     return final_ret
 
-def getCombinedFile(uids):
+def mergeData(uids, individual_files=False):
     '''
     Create one ouput file with
-    all runs of all subjects
+    all runs of all subjects;
+    
+    if individual_files is True,
+    additionally create two ouput
+    files per subject, one for each fMRI run
     '''
     dataframes = []
     for uid in uids:
-        df = mergeFilesForUser(uid, write_csv = False)
+        df = mergeFilesForUser(uid, write_csv = individual_files)
         if df is None:  ## Something went wrong
             print("mergeFilesForUser returned empty dataframe; script aborted")
             return
@@ -250,16 +254,27 @@ def getSeparateFiles(uids):
         mergeFilesForUser(uid, write_csv = True)
 
 if __name__ == "__main__":
+    import time
+    start_time = time.time()
+    
     path_to_data = os.path.join("data_raw", "")
     
     # Only run for subjects where we have activity, SMS, and fMRI data
     uids_activity = [f[0:4] for f in os.listdir(path_to_data) if 'Activity' in f]
     uids_sms = [f[4:8] for f in os.listdir(path_to_data) if 'sms-times' in f]
-    uids_fmri = [f[4:8] for f in os.listdir(path_to_data) if 'HealthMessage' in f]
-    
+    #uids_fmri = [f[4:8] for f in os.listdir(path_to_data) if 'HealthMessage' in f]
+
+    uids_fmri_1 = [f[4:8] for f in os.listdir(path_to_data) if 'HealthMessage_run-01' in f]
+    uids_fmri_2 = [f[4:8] for f in os.listdir(path_to_data) if 'HealthMessage_run-02' in f]
+    uids_fmri = set(uids_fmri_1) & set(uids_fmri_2)
+
     uids = sorted(set(uids_sms) & set(uids_fmri) & set(uids_activity), key = lambda x: int(x))
-    uids = ['1011', '1105']
+    #uids = ['1011', '1105']
     
-    # Output separate files for these subjects
-    getSeparateFiles(uids)
-    getCombinedFile(uids)
+    # Output files for these subjects
+    #getSeparateFiles(uids)
+    #getCombinedFile(uids)
+    mergeData(uids, individual_files=True)
+    
+    print("--- %s seconds ---" % (time.time() - start_time))
+
