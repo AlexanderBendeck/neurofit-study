@@ -154,16 +154,27 @@ def mergeFilesForUser(uid, write_csv=False):
     act_SMS_surveys['msg_id'] = valence_short + "_" + s_ns_short + "_" + msg_num
     
     # Read in the subject's two fMRI runs as dataframes and label rows with run number
-    run1 = pd.read_csv(path_to_data + "sub-" + uid + "_task-HealthMessage_run-01_events.tsv", sep='\t')
-    run1['run'] = '01'
-    run2 = pd.read_csv(path_to_data + "sub-" + uid + "_task-HealthMessage_run-02_events.tsv", sep='\t')
-    run2['run'] = '02'
+    try:
+        run1 = pd.read_csv(path_to_data + "sub-" + uid + "_task-HealthMessage_run-01_events.tsv", sep='\t')
+        run1['run'] = '01'
+    except:
+        print("Missing fmri run 01 for uid " + uid)
+        run1 = pd.DataFrame()
+    try:
+        run2 = pd.read_csv(path_to_data + "sub-" + uid + "_task-HealthMessage_run-02_events.tsv", sep='\t')
+        run2['run'] = '02'
+    except:
+        print("Missing fmri run 02 for uid " + uid)
+        run2 = pd.DataFrame()
     
     # Concatenate dataframes for different runs
     runs = pd.concat([run1, run2])
     
     # Create final merged dataframe
-    final_merged = pd.merge(act_SMS_surveys, runs, how='left', left_on=['msg_id'], right_on=['id'])
+    if not runs.empty:
+        final_merged = pd.merge(act_SMS_surveys, runs, how='left', left_on=['msg_id'], right_on=['id'])
+    else:
+        final_merged = act_SMS_surveys
 
     # Normalize TotalSteps and RestingHeartRate
     totSteps = final_merged['TotalSteps'].apply(lambda x: int(x) if x != "NA" else np.NaN)
@@ -182,6 +193,7 @@ def mergeFilesForUser(uid, write_csv=False):
     final_merged['survey_complete_timestamp'] = final_merged['survey_complete_timestamp'].apply(dateToUnix)
     final_merged['sub'] = int(uid)
     
+    # All desired columns if no data is missing
     finalCols = ['sub', 'run', 'onset', 'duration', 'trial', 'trial_type', 'rating', 'resp_time', 'msg_start',
                  'subj_day_num', 'sms_timestamp', 'ActivityDate',  'TotalSteps', 'TotalSteps_norm', 'TotalDistance',
                  'VeryActiveDistance', 'ModeratelyActiveDistance', 'LightActiveDistance', 'SedentaryActiveDistance',
@@ -191,7 +203,12 @@ def mergeFilesForUser(uid, write_csv=False):
                  'survey_complete_timestamp', 'location', 'lap', 'hap', 'han', 'lan', 'la', 'p', 'n', 'ha', 'self_efficacy_daily',
                  'TotalSleepRecords', 'TotalMinutesAsleep', 'TotalMinutesLight', 'TotalMinutesDeep', 'TotalMinutesREM']
     
-    final_ret = final_merged.copy()[finalCols]  ## For combined file, include activity date
+    # Fill columns with NA if data was missing (column doesn't exist)
+    finalColsDiff = set(finalCols) - set(final_merged.columns)
+    for col in finalColsDiff:
+        final_merged[col] = "NA"
+    
+    final_ret = final_merged.copy()[finalCols]  ## For combined file
     
     finalCols.remove('ActivityDate')  ## For individual files, don't include activity date
     finalCols.remove('msg_start')
@@ -199,12 +216,18 @@ def mergeFilesForUser(uid, write_csv=False):
     
     # Write CSV files (one per fMRI run) for this subject, if desired
     if write_csv:
-        run01 = final_merged.loc[final_merged['run'] == '01'].sort_values(by=['trial', 'onset'])
-        fname01 = "sub-" + uid + "_task-HealthMessage_run-01_events_all_vars"
-        pd.DataFrame.to_csv(run01[finalCols[2:]], os.path.join("data_clean" , fname01) + ".csv", index=False)
-        run02 = final_merged.loc[final_merged['run'] == '02'].sort_values(by=['trial', 'onset'])
-        fname02 = "sub-" + uid + "_task-HealthMessage_run-02_events_all_vars"
-        pd.DataFrame.to_csv(run02[finalCols[2:]], os.path.join("data_clean" , fname02) + ".csv", index=False)
+        run01 = final_merged.loc[final_merged['run'] == '01']
+        if not run01.empty:
+            run01 = run01.sort_values(by=['trial', 'onset'])
+            fname01 = "sub-" + uid + "_task-HealthMessage_run-01_events_all_vars"
+            pd.DataFrame.to_csv(run01[finalCols[2:]], os.path.join("data_clean" , fname01) + ".csv", index=False)
+        
+        run02 = final_merged.loc[final_merged['run'] == '02']
+        if not run02.empty:
+            run02 = run02.sort_values(by=['trial', 'onset'])
+            fname02 = "sub-" + uid + "_task-HealthMessage_run-02_events_all_vars"
+            pd.DataFrame.to_csv(run02[finalCols[2:]], os.path.join("data_clean" , fname02) + ".csv", index=False)
+        
         #both_runs = final_merged.sort_values(by=['run', 'trial', 'onset'])
         #fname03 = "sub-" + uid + "_task-HealthMessage_events_all_vars"
         #pd.DataFrame.to_csv(both_runs, os.path.join("data_clean" , fname03) + ".csv", index=False)
@@ -235,15 +258,11 @@ def mergeData(uids, individual_files=False):
 if __name__ == "__main__":
     path_to_data = os.path.join("data_raw", "")
     
-    # Only run for subjects where we have activity, SMS, and fMRI data
+    # Only run for subjects where we have activity and SMS data
     uids_activity = [f[0:4] for f in os.listdir(path_to_data) if 'Activity' in f]
     uids_sms = [f[4:8] for f in os.listdir(path_to_data) if 'sms-times' in f]
 
-    uids_fmri_1 = [f[4:8] for f in os.listdir(path_to_data) if 'HealthMessage_run-01' in f]
-    uids_fmri_2 = [f[4:8] for f in os.listdir(path_to_data) if 'HealthMessage_run-02' in f]
-    uids_fmri = set(uids_fmri_1) & set(uids_fmri_2)
-
-    uids = sorted(set(uids_sms) & set(uids_fmri) & set(uids_activity), key = lambda x: int(x))
+    uids = sorted(set(uids_sms) & set(uids_activity), key = lambda x: int(x))
     #uids = ['1011', '1105']
     
     # Output files for these subjects
