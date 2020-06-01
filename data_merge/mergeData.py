@@ -194,6 +194,7 @@ def mergeFilesForUser(uid, write_csv=False):
     final_ret = final_merged.copy()[finalCols]  ## For combined file, include activity date
     
     finalCols.remove('ActivityDate')  ## For individual files, don't include activity date
+    finalCols.remove('msg_start')
     final_merged = final_merged[finalCols]
     
     # Write CSV files (one per fMRI run) for this subject, if desired
