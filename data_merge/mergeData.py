@@ -111,9 +111,12 @@ def mergeFilesForUser(uid, write_csv=False):
     smsDates = smsData['timestamp'].apply(safeDateConvert)
     smsDatesClean = smsDates[smsDates != "N/A"]
     smsData['SmsDate'] = smsDatesClean
+    
+    msgStartDate = pd.Timestamp(smsData['SmsDate'][0])
 
     # Merge survey and SMS rows on date
     act_SMS = pd.merge(act_sleep, smsData, how='left', left_on='ActivityDate', right_on='SmsDate')
+    act_SMS['msg_start'] = act_SMS['ActivityDate'].apply(lambda x: 0 if pd.Timestamp(x) < msgStartDate else 1)
 
     # Re-order columns of final_merged dataframe
     cols = act_SMS.columns.tolist()
@@ -179,7 +182,7 @@ def mergeFilesForUser(uid, write_csv=False):
     final_merged['survey_complete_timestamp'] = final_merged['survey_complete_timestamp'].apply(dateToUnix)
     final_merged['sub'] = int(uid)
     
-    finalCols = ['sub', 'run', 'onset', 'duration', 'trial', 'trial_type', 'rating', 'resp_time',
+    finalCols = ['sub', 'run', 'onset', 'duration', 'trial', 'trial_type', 'rating', 'resp_time', 'msg_start',
                  'subj_day_num', 'sms_timestamp', 'ActivityDate',  'TotalSteps', 'TotalSteps_norm', 'TotalDistance',
                  'VeryActiveDistance', 'ModeratelyActiveDistance', 'LightActiveDistance', 'SedentaryActiveDistance',
                  'VeryActiveMinutes', 'FairlyActiveMinutes', 'LightlyActiveMinutes', 'SedentaryMinutes',
