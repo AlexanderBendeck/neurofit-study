@@ -95,7 +95,6 @@ def mergeFilesForUser(uid, write_csv=False):
     userActivity = pd.read_csv(path_to_data + activityFile)
     userActivity['ActivityDate'] = userActivity['ActivityDate'].apply(formatDate)
 
-
     sleepLog = pd.read_csv(path_to_data + sleepFile)
     sleepLog['DateToFormat'] = sleepLog['SleepDay'].apply(safeDateConvert)
     sleepLog['DateToMerge'] = sleepLog['DateToFormat'].apply(formatDate)
