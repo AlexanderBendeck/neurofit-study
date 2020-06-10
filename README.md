@@ -1,4 +1,4 @@
-# Using Neuroscience to Optimize Digital Health Interventions across Adulthood (2018-2019)
+# Using Neuroscience to Optimize Digital Health Interventions across Adulthood (2018-present)
 
 ## Background
 Most people know that being more physically active is good for them, but many still don’t do it. While clinical trials have demonstrated the efficacy of exercise programs for enhancing cognition and well-being in older age, a persistent challenge is how to motivate aging adults to engage in physical activity in their daily lives. Recent neuroscientific and psychological research shows that motivation changes with age. Older adults are more motivated by social rewards and pay more attention to and better remember positively-framed messages relative to negatively-framed ones. Thus, positively-framed social rewards may provide critical incentives for aging adults to engage in physical activity.
@@ -11,13 +11,9 @@ The project will test the hypothesis that positively-framed social rewards will 
 ## Anticipated Outcomes
 Publication of findings; data, code and experimental stimuli made publicly available through OSF; application for large multidisciplinary federal grant; development of a personalized mobile digital physical activity promotion program that can target aging adults across diverse communities in the local geographical area and beyond
 
-## Timing
-Summer 2018 – Summer 2019  
+## Recent Progress
+Fall 2019: Initial in-lab cognitive batter, health assessment and MRI scanning; 3-month activity monitoring
 
-Summer 2018: Protocol and task development; Institutional Review Board and BIAC MRI scanning development; participant recruitment
+Spring 2020: Complete follow-up visits for cognitive batter and health assessment; begin behavioral and MRI data quality checking and preprocessing; begin data processing and analysis
 
-Fall 2018: Initial in-lab cognitive battery, health assessment, MRI scanning; 3-month activity monitoring; begin follow-up visits for cognitive battery and health assessment
-
-Spring 2019: Complete follow-up visits; begin behavioral and MRI data quality checking and preprocessing; data analysis
-
-Summer 2019: Draft reports for conference presentations and manuscripts; post data and stimuli online as public resources
+Fall 2020 - Spring 2021: Finish data processing and analysis; draft reports for conference presentations; draft manuscripts; post data and stimuli online as public resources
