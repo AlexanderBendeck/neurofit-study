@@ -103,25 +103,31 @@ def mergeFilesForUser(uid, write_csv=False):
     
     # Find SMS data file, load dataframe, clean up subject day numbers,
     # and throw out survey timestamp (keep date)
-    smsData = pd.read_csv(path_to_data + "sub-" + uid + "_sms-times.csv") 
-    smsData.rename(columns={'Unnamed: 0':'subj_day_num'}, inplace=True)
-    smsData['subj_day_num'] = smsData['subj_day_num'].apply(lambda x: x+1)
-
-    smsDates = smsData['timestamp'].apply(safeDateConvert)
-    smsDatesClean = smsDates[smsDates != "N/A"]
-    smsData['SmsDate'] = smsDatesClean
+    try:
+        smsData = pd.read_csv(path_to_data + "sub-" + uid + "_sms-times.csv") 
+        smsData.rename(columns={'Unnamed: 0':'subj_day_num'}, inplace=True)
+        smsData['subj_day_num'] = smsData['subj_day_num'].apply(lambda x: x+1)
     
-    msgStartDate = pd.Timestamp(smsData['SmsDate'][0])
-
-    # Merge survey and SMS rows on date
-    act_SMS = pd.merge(act_sleep, smsData, how='left', left_on='ActivityDate', right_on='SmsDate')
-    act_SMS['msg_start'] = act_SMS['ActivityDate'].apply(lambda x: 0 if pd.Timestamp(x) < msgStartDate else 1)
-
-    # Re-order columns of final_merged dataframe
-    cols = act_SMS.columns.tolist()
-    cols.remove('subj_day_num')
-    act_SMS = act_SMS[['subj_day_num']+cols]
+        smsDates = smsData['timestamp'].apply(safeDateConvert)
+        smsDatesClean = smsDates[smsDates != "N/A"]
+        smsData['SmsDate'] = smsDatesClean
+        
+        msgStartDate = pd.Timestamp(smsData['SmsDate'][0])
     
+        # Merge survey and SMS rows on date
+        act_SMS = pd.merge(act_sleep, smsData, how='left', left_on='ActivityDate', right_on='SmsDate')
+        act_SMS['msg_start'] = act_SMS['ActivityDate'].apply(lambda x: 0 if pd.Timestamp(x) < msgStartDate else 1)
+    
+        # Re-order columns of final_merged dataframe
+        cols = act_SMS.columns.tolist()
+        cols.remove('subj_day_num')
+        act_SMS = act_SMS[['subj_day_num']+cols]
+        smsPresent = True
+    except:
+        print("Missing SMS data for uid " + uid)
+        act_SMS = act_sleep
+        smsPresent = False
+        
     # Find combined survey data file, load dataframe, and throw out survey timestamp (keep date)
     surveyFiles = [f for f in os.listdir(path_to_data) if f.startswith("DailySurveys")]
     if len(surveyFiles) == 0:
@@ -145,12 +151,13 @@ def mergeFilesForUser(uid, write_csv=False):
     act_SMS_surveys = act_SMS_surveys.fillna("NA")
     
     # Create combined message ID column (currenly not used in output)
-    valence = act_SMS_surveys['valence']
-    valence_short = valence.apply(lambda x: x[0:3])
-    s_ns = act_SMS_surveys['s_ns']
-    s_ns_short = s_ns.apply(lambda x: x[0:3] if x[0] == 's' else x[0:6])
-    msg_num = act_SMS_surveys['id'].astype(str).apply(lambda x: x[:-2])
-    act_SMS_surveys['msg_id'] = valence_short + "_" + s_ns_short + "_" + msg_num
+    if smsPresent:
+        valence = act_SMS_surveys['valence']
+        valence_short = valence.apply(lambda x: x[0:3])
+        s_ns = act_SMS_surveys['s_ns']
+        s_ns_short = s_ns.apply(lambda x: x[0:3] if x[0] == 's' else x[0:6])
+        msg_num = act_SMS_surveys['id'].astype(str).apply(lambda x: x[:-2])
+        act_SMS_surveys['msg_id'] = valence_short + "_" + s_ns_short + "_" + msg_num
     
     # Read in the subject's two fMRI runs as dataframes and label rows with run number
     try:
@@ -170,7 +177,7 @@ def mergeFilesForUser(uid, write_csv=False):
     runs = pd.concat([run1, run2])
     
     # Create final merged dataframe
-    if not runs.empty:
+    if smsPresent and not runs.empty:
         final_merged = pd.merge(act_SMS_surveys, runs, how='left', left_on=['msg_id'], right_on=['id'])
     else:
         final_merged = act_SMS_surveys
@@ -257,11 +264,16 @@ def mergeData(uids, individual_files=False):
 if __name__ == "__main__":
     path_to_data = os.path.join("data_raw", "")
     
-    # Only run for subjects where we have activity and SMS data
+    # Only run for subjects where we at least have activity data
     uids_activity = [f[0:4] for f in os.listdir(path_to_data) if 'Activity' in f]
-    uids_sms = [f[4:8] for f in os.listdir(path_to_data) if 'sms-times' in f]
+    
+    #uids_sms = [f[4:8] for f in os.listdir(path_to_data) if 'sms-times' in f]
 
-    uids = sorted(set(uids_sms) & set(uids_activity), key = lambda x: int(x))
+    #uids_fmri_1 = [f[4:8] for f in os.listdir(path_to_data) if 'HealthMessage_run-01' in f]
+    #uids_fmri_2 = [f[4:8] for f in os.listdir(path_to_data) if 'HealthMessage_run-02' in f]
+    #uids_fmri = set(uids_fmri_1) & set(uids_fmri_2)
+
+    uids = uids_activity
     #uids = ['1011', '1105']
     
     # Output files for these subjects
