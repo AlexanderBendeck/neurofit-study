@@ -32,6 +32,7 @@ import pandas as pd
 import numpy as np
 import os
 
+
 def safeDateConvert(val, verbose=False):
     '''
     Takes dates/times from surveys, SMS, & sleep data
@@ -47,6 +48,7 @@ def safeDateConvert(val, verbose=False):
             print(val)  ## What is val if it's not a string?
     return "N/A"  ## If not a valid date (not string, or string but not date)
 
+
 def formatDate(date):
     '''
     Re-formats dates from daily activity
@@ -60,6 +62,7 @@ def formatDate(date):
         day = '0'+day
     return "-".join([yr, m, day])
 
+
 def dateToUnix(date):
     '''
     Converts date to Unix timestamp
@@ -68,6 +71,7 @@ def dateToUnix(date):
         return date
     else:
         return (pd.to_datetime([date]).astype(int) / 10**9)[0].astype(int)
+
 
 def mergeFilesForUser(uid, write_csv=False):
     '''
@@ -143,28 +147,34 @@ def mergeFilesForUser(uid, write_csv=False):
     # Find combined survey data file, load dataframe
     # and re-format survey timestamp (keep only the date)
     surveyFiles = [f for f in os.listdir(path_to_data) if f.startswith("DailySurveys")]
-    if len(surveyFiles) == 0:
-        print("DailySurveys file not found. Make sure the file name starts with: 'DailySurveys'" + "\n")
-        return
-    elif len(surveyFiles) > 1:
-        print(str(len(surveyFiles)) + " DailySurveys files found. Using file: " + surveyFiles[0] + "\n")
-    surveyData = pd.read_csv(path_to_data + surveyFiles[0]) 
-
-    surveyDates = surveyData['daily_survey_timestamp'].apply(safeDateConvert)
-    surveyDatesClean = surveyDates[surveyDates != "N/A"]
-    surveyData['SurveyDate'] = surveyDatesClean
+    if len(surveyFiles) > 0:
+        # Notify if there are multiple survey files
+        if len(surveyFiles) > 1:
+            print(str(len(surveyFiles)) + " DailySurveys files found. Using file: " + surveyFiles[0] + "\n")
+        
+        # Load surveys dataframe and clean data
+        surveyData = pd.read_csv(path_to_data + surveyFiles[0]) 
+        surveyDates = surveyData['daily_survey_timestamp'].apply(safeDateConvert)
+        surveyDatesClean = surveyDates[surveyDates != "N/A"]
+        surveyData['SurveyDate'] = surveyDatesClean
+        
+        # Find this user's rows in the survey dataframe and store in new dataframe
+        surveyDataForUser = surveyData.loc[surveyData['subject_id'] == int(uid)]
+        if surveyDataForUser.size == 0: # Sometimes these are stored as strings instead
+            surveyDataForUser = surveyData.loc[surveyData['subject_id'] == uid]
+        
+        # Merge activity/SMS and survey rows using date 
+        # and fill survey cols with 'NA' if surveys are missing
+        act_SMS_surveys = pd.merge(act_SMS, surveyDataForUser, how='left', left_on='ActivityDate', right_on='SurveyDate')
+        act_SMS_surveys['daily_survey_timestamp'] = act_SMS_surveys['daily_survey_timestamp'].apply(dateToUnix)
+    else:  ## Missing survey file
+        act_SMS_surveys = act_SMS
     
-    # Find this user's rows in the survey dataframe and store in new dataframe
-    surveyDataForUser = surveyData.loc[surveyData['subject_id'] == int(uid)]
-    if surveyDataForUser.size == 0:
-        surveyDataForUser = surveyData.loc[surveyData['subject_id'] == uid]
-
-    # Merge activity/SMS and survey rows using date 
-    # and fill survey cols with 'NA' if surveys are missing
-    act_SMS_surveys = pd.merge(act_SMS, surveyDataForUser, how='left', left_on='ActivityDate', right_on='SurveyDate')
+    # Format null values as desired
     act_SMS_surveys = act_SMS_surveys.fillna("NA")
     
-    # Create combined message ID column (currenly not used in output)
+    # Create combined message ID column using SMS columns
+    # (currenly used to merge dataframes, but not used in output file)
     if smsPresent:
         valence = act_SMS_surveys['valence']
         valence_short = valence.apply(lambda x: x[0:3])
@@ -210,7 +220,6 @@ def mergeFilesForUser(uid, write_csv=False):
                                  's_ns_x':'s_ns',
                                  'id_x':'msg_id'}, inplace=True)
     final_merged = final_merged.fillna('NA')
-    final_merged['survey_complete_timestamp'] = final_merged['survey_complete_timestamp'].apply(dateToUnix)
     final_merged['sub'] = int(uid)
     
     # All desired columns if no data is missing
@@ -255,6 +264,7 @@ def mergeFilesForUser(uid, write_csv=False):
     # Return the final merged dataframe for the combined file
     return final_ret
 
+
 def mergeData(uids, individual_files=True):
     '''
     Create one ouput file with
@@ -264,6 +274,11 @@ def mergeData(uids, individual_files=True):
     additionally create two ouput
     files per subject, one for each fMRI run
     '''
+    # Notify if there is no combined survey file
+    surveyFiles = [f for f in os.listdir(path_to_data) if f.startswith("DailySurveys")]
+    if len(surveyFiles) == 0:
+        print("DailySurveys file not found. Make sure the file name starts with: 'DailySurveys'" + "\n")
+    
     # Get individual dataframes for each subject number
     dataframes = []
     for uid in uids:
@@ -272,6 +287,7 @@ def mergeData(uids, individual_files=True):
             dataframes.append(df)
         else: # Something went wrong
             print("uid " + uid + " will not be in combined file")
+    
     # Concatenate individual dataframes together
     # and sort rows by subject number and activity date
     if len(dataframes) > 0:
@@ -280,6 +296,7 @@ def mergeData(uids, individual_files=True):
         pd.DataFrame.to_csv(allInOne, os.path.join("data_clean" ,"final_merged_data_all_norm.csv"), index=False)
     else:
         print("No valid participant IDs; no combined file written")
+
 
 if __name__ == "__main__":
     path_to_data = os.path.join("data_raw", "")
