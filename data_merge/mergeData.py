@@ -89,21 +89,29 @@ def mergeFilesForUser(uid, write_csv=False):
     '''
     path_to_data = os.path.join("data_raw", "")
     
+    # Find fitabase files for user
     fitabase_files = [f for f in os.listdir(path_to_data) if f.startswith(uid)]
-    activityFile = [f for f in fitabase_files if "Activity" in f][0]
-    sleepFile = [f for f in fitabase_files if "sleep" in f][0]
     
-    # Find activity file for user, load dataframe, and re-format date
-    userActivity = pd.read_csv(path_to_data + activityFile)
-    userActivity['ActivityDate'] = userActivity['ActivityDate'].apply(formatDate)
+    # Load activity file for user, load dataframe, and re-format date
+    try:
+        activityFile = [f for f in fitabase_files if "Activity" in f][0]
+        userActivity = pd.read_csv(path_to_data + activityFile)
+        userActivity['ActivityDate'] = userActivity['ActivityDate'].apply(formatDate)
+    except:
+        print("No activity data for uid " + uid + "; aborting for this participant")
+        return
 
-    # Find sleep file for user, load dataframe, and re-format date
-    sleepLog = pd.read_csv(path_to_data + sleepFile)
-    sleepLog['DateToFormat'] = sleepLog['SleepDay'].apply(safeDateConvert)
-    sleepLog['DateToMerge'] = sleepLog['DateToFormat'].apply(formatDate)
-    
-    # Merge activity and sleep data using date
-    act_sleep = pd.merge(userActivity, sleepLog, how="left", left_on='ActivityDate', right_on='DateToMerge')
+    # Load sleep file for user, load dataframe, and re-format date
+    try:
+        sleepFile = [f for f in fitabase_files if "sleep" in f][0]
+        sleepLog = pd.read_csv(path_to_data + sleepFile)
+        sleepLog['DateToFormat'] = sleepLog['SleepDay'].apply(safeDateConvert)
+        sleepLog['DateToMerge'] = sleepLog['DateToFormat'].apply(formatDate)
+        # Merge with activity data using date
+        act_sleep = pd.merge(userActivity, sleepLog, how="left", left_on='ActivityDate', right_on='DateToMerge')
+    except:
+        print("No sleep data for uid " + uid)
+        act_sleep = userActivity
     
     # Find SMS data file, load dataframe, clean up subject day numbers,
     # and re-format the survey timestamp (to keep only the date)
@@ -260,15 +268,18 @@ def mergeData(uids, individual_files=True):
     dataframes = []
     for uid in uids:
         df = mergeFilesForUser(uid, write_csv = individual_files)
-        if df is None:  ## Something went wrong
-            print("mergeFilesForUser returned empty dataframe; script aborted")
-            return
-        dataframes.append(df)            
+        if df is not None:
+            dataframes.append(df)
+        else: # Something went wrong
+            print("uid " + uid + " will not be in combined file")
     # Concatenate individual dataframes together
     # and sort rows by subject number and activity date
-    allInOne = pd.concat(dataframes)
-    allInOne = allInOne.sort_values(by=['sub', 'ActivityDate'])
-    pd.DataFrame.to_csv(allInOne, os.path.join("data_clean" ,"final_merged_data_all_norm.csv"), index=False)
+    if len(dataframes) > 0:
+        allInOne = pd.concat(dataframes)
+        allInOne = allInOne.sort_values(by=['sub', 'ActivityDate'])
+        pd.DataFrame.to_csv(allInOne, os.path.join("data_clean" ,"final_merged_data_all_norm.csv"), index=False)
+    else:
+        print("No valid participant IDs; no combined file written")
 
 if __name__ == "__main__":
     path_to_data = os.path.join("data_raw", "")
