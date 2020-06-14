@@ -67,8 +67,8 @@ def dateToUnix(date):
     '''
     Converts date to Unix timestamp
     '''
-    if date == "NA":
-        return date
+    if date == "NA" or date == np.NaN:
+        return "NA"
     else:
         return (pd.to_datetime([date]).astype(int) / 10**9)[0].astype(int)
 
@@ -166,13 +166,11 @@ def mergeFilesForUser(uid, write_csv=False):
         # Merge activity/SMS and survey rows using date 
         # and fill survey cols with 'NA' if surveys are missing
         act_SMS_surveys = pd.merge(act_SMS, surveyDataForUser, how='left', left_on='ActivityDate', right_on='SurveyDate')
+        act_SMS_surveys = act_SMS_surveys.fillna("NA")
         act_SMS_surveys['daily_survey_timestamp'] = act_SMS_surveys['daily_survey_timestamp'].apply(dateToUnix)
     else:  ## Missing survey file
-        act_SMS_surveys = act_SMS
-    
-    # Format null values as desired
-    act_SMS_surveys = act_SMS_surveys.fillna("NA")
-    
+        act_SMS_surveys = act_SMS.fillna("NA")
+        
     # Create combined message ID column using SMS columns
     # (currenly used to merge dataframes, but not used in output file)
     if smsPresent:
