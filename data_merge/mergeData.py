@@ -67,7 +67,7 @@ def dateToUnix(date):
     '''
     Converts date to Unix timestamp
     '''
-    if date == "NA" or date == np.NaN:
+    if date == "NA":
         return "NA"
     else:
         return (pd.to_datetime([date]).astype(int) / 10**9)[0].astype(int)
