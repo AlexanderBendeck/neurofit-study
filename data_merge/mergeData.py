@@ -11,19 +11,20 @@ REQUIREMENTS
 
 
 HOW TO RUN
-    Files to put in the 'data_raw' folder:
+    Put all of the following files in the 'data_raw' folder,
+    with the default file name from when they were acquired:
         1. Daily activity logs for each individual - Fitabase
         2. Sleep stages ("day") logs for each individual - Fitabase
         3. SMS data logs for each individual - TextMagic
         4. fMRI data (2 files) for each individual - Server/Cluster
         5. Daily surveys (1 combined file with all participants) - Redcap
     
-    To get one file for all participants, use mergeData(uids)
-    where uids is a list of user IDs as strings.
-    
-    To get files for each participant separated by fMRI run
-    (i.e. 2 files per person), set keyword argument 
-    individual_files=True when calling mergeData.
+    The script calls mergeData with a list of participant id numbers
+    as strings and returns a large combined file for all participants.
+    By default, we specify individual_files=True to indicate that we
+    also want to get files for each participant separated by fMRI run
+    (i.e. 2 files per person). Both the large combined file and the
+    individual files will be created in the 'data_clean' folder.
     
 '''
 
@@ -43,7 +44,7 @@ def safeDateConvert(val, verbose=False):
             return val.split()[0]
     else:
         if verbose:
-            print(val)  ## What is val if not a string?
+            print(val)  ## What is val if it's not a string?
     return "N/A"  ## If not a valid date (not string, or string but not date)
 
 def formatDate(date):
@@ -71,17 +72,18 @@ def dateToUnix(date):
 def mergeFilesForUser(uid, write_csv=False):
     '''
     Merge the following: 
-       * daily activity FitBit data (one file per subject)
-       * daily survey data (one combined file)
+       * Daily activity FitBit data (one file per subject)
+       * Sleep stages "day" logs (one file per subject)
+       * Daily survey data (one combined file)
        * fMRI data (one file per run, per subject)
        * SMS data (one file per subject)
     
     All input data should be in a directory named:
-        data_raw
+        'data_raw'
     which is in the same directory as this script.
     
     All ouput data will be placed in a directory named:
-        data_clean
+        'data_clean'
     which should be created beforehand in the same 
     directory as this script.
     '''
@@ -95,14 +97,16 @@ def mergeFilesForUser(uid, write_csv=False):
     userActivity = pd.read_csv(path_to_data + activityFile)
     userActivity['ActivityDate'] = userActivity['ActivityDate'].apply(formatDate)
 
+    # Find sleep file for user, load dataframe, and re-format date
     sleepLog = pd.read_csv(path_to_data + sleepFile)
     sleepLog['DateToFormat'] = sleepLog['SleepDay'].apply(safeDateConvert)
     sleepLog['DateToMerge'] = sleepLog['DateToFormat'].apply(formatDate)
     
+    # Merge activity and sleep data using date
     act_sleep = pd.merge(userActivity, sleepLog, how="left", left_on='ActivityDate', right_on='DateToMerge')
     
     # Find SMS data file, load dataframe, clean up subject day numbers,
-    # and throw out survey timestamp (keep date)
+    # and re-format the survey timestamp (to keep only the date)
     try:
         smsData = pd.read_csv(path_to_data + "sub-" + uid + "_sms-times.csv") 
         smsData.rename(columns={'Unnamed: 0':'subj_day_num'}, inplace=True)
@@ -114,11 +118,11 @@ def mergeFilesForUser(uid, write_csv=False):
         
         msgStartDate = pd.Timestamp(smsData['SmsDate'][0])
     
-        # Merge survey and SMS rows on date
+        # Merge survey and SMS rows using date
         act_SMS = pd.merge(act_sleep, smsData, how='left', left_on='ActivityDate', right_on='SmsDate')
         act_SMS['msg_start'] = act_SMS['ActivityDate'].apply(lambda x: 0 if pd.Timestamp(x) < msgStartDate else 1)
     
-        # Re-order columns of final_merged dataframe
+        # Re-order columns of merged dataframe
         cols = act_SMS.columns.tolist()
         cols.remove('subj_day_num')
         act_SMS = act_SMS[['subj_day_num']+cols]
@@ -128,7 +132,8 @@ def mergeFilesForUser(uid, write_csv=False):
         act_SMS = act_sleep
         smsPresent = False
         
-    # Find combined survey data file, load dataframe, and throw out survey timestamp (keep date)
+    # Find combined survey data file, load dataframe
+    # and re-format survey timestamp (keep only the date)
     surveyFiles = [f for f in os.listdir(path_to_data) if f.startswith("DailySurveys")]
     if len(surveyFiles) == 0:
         print("DailySurveys file not found. Make sure the file name starts with: 'DailySurveys'" + "\n")
@@ -146,7 +151,8 @@ def mergeFilesForUser(uid, write_csv=False):
     if surveyDataForUser.size == 0:
         surveyDataForUser = surveyData.loc[surveyData['subject_id'] == uid]
 
-    # Merge activity/SMS and survey rows on date, fill survey cols with NA if missing surveys
+    # Merge activity/SMS and survey rows using date 
+    # and fill survey cols with 'NA' if surveys are missing
     act_SMS_surveys = pd.merge(act_SMS, surveyDataForUser, how='left', left_on='ActivityDate', right_on='SurveyDate')
     act_SMS_surveys = act_SMS_surveys.fillna("NA")
     
@@ -158,6 +164,7 @@ def mergeFilesForUser(uid, write_csv=False):
         s_ns_short = s_ns.apply(lambda x: x[0:3] if x[0] == 's' else x[0:6])
         msg_num = act_SMS_surveys['id'].astype(str).apply(lambda x: x[:-2])
         act_SMS_surveys['msg_id'] = valence_short + "_" + s_ns_short + "_" + msg_num
+        act_SMS_surveys.rename(columns={'msg_id':'msg_id_combined'}, inplace=True)
     
     # Read in the subject's two fMRI runs as dataframes and label rows with run number
     try:
@@ -178,23 +185,22 @@ def mergeFilesForUser(uid, write_csv=False):
     
     # Create final merged dataframe
     if smsPresent and not runs.empty:
-        final_merged = pd.merge(act_SMS_surveys, runs, how='left', left_on=['msg_id'], right_on=['id'])
+        final_merged = pd.merge(act_SMS_surveys, runs, how='left', left_on=['msg_id_combined'], right_on=['id'])
     else:
         final_merged = act_SMS_surveys
 
-    # Normalize TotalSteps and RestingHeartRate
+    # Normalize TotalSteps and RestingHeartRate from daily activity
     totSteps = final_merged['TotalSteps'].apply(lambda x: int(x) if x != "NA" else np.NaN)
     restingHR = final_merged['RestingHeartRate'].apply(lambda x: int(x) if x != "NA" else np.NaN)
     final_merged['TotalSteps_norm'] = (final_merged['TotalSteps'] - totSteps.mean()) / totSteps.std()
     final_merged['RestingHeartRate_norm'] = (restingHR - restingHR.mean()) / restingHR.std()
     
     # Re-format column names and null values
-    final_merged.rename(columns={'msg_id':'msg_id_combined'}, inplace=True)
-    final_merged.rename(columns={'unix_timestamp':'sms_timestamp',
-                            'valence_x':'valence',
-                            's_ns_x':'s_ns',
-                            'id_x':'msg_id',
-                            'daily_survey_timestamp':'survey_complete_timestamp'}, inplace=True)
+    final_merged.rename(columns={'daily_survey_timestamp':'survey_complete_timestamp',
+                                 'unix_timestamp':'sms_timestamp',
+                                 'valence_x':'valence',
+                                 's_ns_x':'s_ns',
+                                 'id_x':'msg_id'}, inplace=True)
     final_merged = final_merged.fillna('NA')
     final_merged['survey_complete_timestamp'] = final_merged['survey_complete_timestamp'].apply(dateToUnix)
     final_merged['sub'] = int(uid)
@@ -214,7 +220,7 @@ def mergeFilesForUser(uid, write_csv=False):
     for col in finalColsDiff:
         final_merged[col] = "NA"
     
-    final_ret = final_merged.copy()[finalCols]  ## For combined file
+    final_ret = final_merged.copy()[finalCols]  ## To be used in combined file
     
     finalCols.remove('ActivityDate')  ## For individual files, don't include activity date
     finalCols.remove('msg_start')
@@ -238,10 +244,10 @@ def mergeFilesForUser(uid, write_csv=False):
         #fname03 = "sub-" + uid + "_task-HealthMessage_events_all_vars"
         #pd.DataFrame.to_csv(both_runs, os.path.join("data_clean" , fname03) + ".csv", index=False)
         
-    # Return the final merged dataframe
+    # Return the final merged dataframe for the combined file
     return final_ret
 
-def mergeData(uids, individual_files=False):
+def mergeData(uids, individual_files=True):
     '''
     Create one ouput file with
     all runs of all subjects;
@@ -250,6 +256,7 @@ def mergeData(uids, individual_files=False):
     additionally create two ouput
     files per subject, one for each fMRI run
     '''
+    # Get individual dataframes for each subject number
     dataframes = []
     for uid in uids:
         df = mergeFilesForUser(uid, write_csv = individual_files)
@@ -257,6 +264,8 @@ def mergeData(uids, individual_files=False):
             print("mergeFilesForUser returned empty dataframe; script aborted")
             return
         dataframes.append(df)            
+    # Concatenate individual dataframes together
+    # and sort rows by subject number and activity date
     allInOne = pd.concat(dataframes)
     allInOne = allInOne.sort_values(by=['sub', 'ActivityDate'])
     pd.DataFrame.to_csv(allInOne, os.path.join("data_clean" ,"final_merged_data_all_norm.csv"), index=False)
