@@ -1,0 +1,810 @@
+---
+title: \vspace{-1cm} Effects of Health-Focused Messages on Physical Activity
+author: "Alexander Bendeck"
+output: pdf_document
+fontsize: 11pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+library(lme4)
+library(knitr)
+library(ordinal)
+```
+
+```{r cache=TRUE, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+
+data_raw = read.csv("neurofit_data.csv")  ## Change path if nec.
+
+data_droprows <- subset(data_raw, (is.na(trial_type)) | trial_type == "rating")
+
+cols_of_interest = c("sub", "rating", "msg_start", "subj_day_num", "ActivityDate", "TotalSteps", "TotalDistance", "valence", "s_ns", "self_efficacy_daily", "TotalMinutesAsleep", "age", "gender")
+
+data_clean = data_droprows[cols_of_interest]
+data_clean$msg_received = as.factor((data_clean$subj_day_num %in% c(1:80))*1)
+
+data_clean2 <- subset(data_clean, !(sub == 1084 & as.Date(ActivityDate) < as.Date("2019-11-01")))
+
+data_clean3 <- subset(data_clean2, !(sub == 1109 & as.Date(ActivityDate) > as.Date("2020-04-10")))
+
+data_clean3 %>%
+  group_by(sub) %>%
+  summarize(days_zero_steps = sum(TotalSteps==0)) %>% arrange(desc(days_zero_steps))
+
+data_clean3$type = paste(data_clean3$valence, data_clean3$s_ns, sep="_")
+data_clean3$type = replace(data_clean3$type, data_clean3$type=="NA_NA", "none")
+
+df = data_clean3 %>%
+  group_by(sub) %>%
+  summarize(m = mean(TotalSteps),s = sd(TotalSteps))
+
+df_temp = merge(df, data_clean3)
+df_temp$TotalSteps_norm = (df_temp$TotalSteps-df_temp$m)/(df_temp$s)
+
+data_clean3$TotalSteps_norm = df_temp$TotalSteps_norm
+
+df2 = data_clean3 %>%
+  group_by(sub) %>%
+  summarize(m_r = mean(na.omit(rating)),s_r = sd(na.omit(rating)))
+
+df_temp = merge(df2, data_clean3)
+df_temp$rating_norm = (df_temp$rating-df_temp$m_r)/(df_temp$s_r)
+
+data_clean3$rating_norm = df_temp$rating_norm
+
+data_clean3$over50 = as.factor((data_clean3$age > 50)*1)
+```
+
+
+## Introduction
+
+### Study Background
+
+The Duke Motivated Cognition and Aging Brain Lab (MCAB Lab), affiliated with the Psychology and Neuroscience departments, conducts research into how to motivate adults to be more physically active. To this end, the lab is conducting a study where participants are given a FitBit to track their number of daily steps. After a brief period where baseline data is collected, participants begin receiving a text message (referred to as a "health message") every day which discusses the importance of physical activity. The order of the messages was randomized at the beginning of the study and is consistent for all participants. Participants receive a message every day for 80 days, and also fill out a survey each day to indicate (i) how relevant they find that day's health message and (ii) their general feelings of "self-efficacy" (confidence in their ability to control their own behavior and environment) that day.
+
+Each health message is labeled as either a "social" message which discusses the implications of the participant's physical activity and healthy living on loved ones, or a "nonsocial" message which eschews these themes. Similarly, each message is also labeled as "positive" or "negative" depending on whether it frames its content in terms of the benefits of physical activity or dangers of inactivity, respectively. For example, one "negative, social" message used is: "Physical inactivity can make daily tasks harder to perform, leaving you with no energy to spend time with friends and family."
+
+### Goal
+
+My overall goal is to use the data that has been collected thus far in order to draw conclusions about the relevance of health messages to adults as well as the impact of health messaging and self-efficacy on physical activity. I am primarily interested in the effect of the type of message received (i.e. "positive social") on self-reported message relevance and daily physical activity, as well as whether there is a discrepancy between the two.
+
+### Significance
+
+The conclusions from this analysis will have implications both for future research and policy. If this study finds that certain types of health messages are effective at motivating adults to be more physically active, future studies could build on this work by designing even more personalized messages for individual adults. Such findings could also inform future decisions by policymakers and nonprofit organizations as they try to promote healthier living as a method of preventive health care. Even on a more personal level, the findings of this study could simply help people understand how to talk to their loved ones about their health in a way that will motivate them to make positive lifestyle choices.
+
+### Scope and Related Work
+
+The questions I will be addressing in this analysis do not include all of the research questions for this study. The study also has a neuroimaging component, where participants read health messages in an fMRI scanner so that their brain activity can be analyzed by researchers. Other undergraduate students' goals on this study rely on this neuroimaging data to understand participant behavior based on their brain scans. I will not be addressing any questions regarding fMRI data, nor is the brain imaging data present in the dataset I will be using. In this way, my analysis and research goals are disjoint from other ongoing work for this study.
+
+In the literature, other studies have served as a proof of concept for the basic study design of using text messages to encourage healthy lifestyle choices; in a 2009 study, 79% of participants said that being sent an average of three health-focused text messages per day helped them towards their weight loss goals (Gerber et al. 2009). Recent work in the Psychology/Neuroscience community has also shown that adults are often more motivated by social rewards and positively-framed messages as opposed to socially irrelevant or negatively-framed messages (Mikels et al. 2016). Studies have also commonly used a record of steps taken as a proxy for overall physical activity (Kraus et al. 2019, Pillay et al. 2015). Such studies have used modeling techniques such as Analysis of Covariance (Pillay et al. 2015) and multiple-sample structural equation models (Chaumeton et al. 2010). Analyzing survey-based data in related studies has been done with little statistical sophistication, only computing simple percentages of participants who agree or disagree with certain statements (Gerber et al. 2009).
+
+
+## Data
+
+### Description
+
+Each row in the dataset corresponds to one calendar day for one individual study participant. There are 36 unique participants in the study, each of whom has over 90 rows for different calendar days. Participants received 80 days of health messages; data was collected for a few days both before and after the messaging period.
+
+As mentioned previously, I am interested in both the participants' self-reported ratings of message relevance as well as their daily physical activity (number of steps taken) tracked by a FitBit. I will investigate using both of the following as *response variables* in different models: (1) the participant's self-reported *rating of the personal relevance of the health message* received that day from 1 to 10 (NA if no message received that day), and (2) the participant's *total steps taken* over the course of that day.
+
+*Predictor variables* of interest include the following: (1) the *age* of the participant in years; (2) the *gender identity* of the participant, chosen from "Male", "Female", or "Other" (though "Male" and "Female" were the only genders reported by participants); (3) a binary indicator of *whether a health message was received* that day; (4) a categorical variable reporting whether the health message received that day was a *"positive" or "negative"* message (NA if no message received that day); (5) a categorical variable reporting whether the health message received that day was a *"social" or "nonsocial"* message (NA if no message received that day); and (6) the participant's self-reported *feelings of self-efficacy* that day on a scale from 1 (low) to 10 (high). Additionally, a *Subject ID* variable will be used for a random effect in hierarchical models.
+
+### Exploratory Data Analysis
+
+Overall, the dataset contains `r nrow(data_clean3)` total data rows across 36 different participants. The table below shows a basic breakdown of the participants by demographics and the response variables of interest. The gender groups are reasonably balanced and have a similar mean age. A simple t-test (included in the Appendix) shows no significant difference between ages across gender groups, so doing comparisons between the groups is reasonable. On a daily basis, members of both gender groups also have similar numbers of steps and ratings of message relevance, though females tend to give slightly higher ratings. Histograms of the response variables, which are omitted here for conciseness (see Appendix), show data that is normally distributed with just a slight skew.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+demographics_by_sub = data_clean3 %>%
+  group_by(sub, gender) %>%
+  summarize(age = mean(age), steps=mean(TotalSteps), rating=mean(rating, na.rm=TRUE))
+
+demographic_table = demographics_by_sub %>%
+  group_by(gender) %>%
+  summarize(subjects = length(unique(sub)), "mean age" = mean(age), "mean steps" = mean(steps), "mean relevance rating" = mean(na.omit(rating)))
+
+
+kable(demographic_table, digits=2, caption="Steps and Relevance Ratings by Gender")
+```
+
+When comparing participants over or under the age of 50, there is not a huge difference in message relevance ratings, but perhaps average steps per day are a bit higher because more of these participants are retired and spend more time engaging in activities they enjoy rather than being at work.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#data_clean3$age_group = as.factor((data_clean3$age %/% 10))
+
+df_2 = data_clean3
+
+vec = as.numeric(df_2$over50)-1
+
+vec[which(vec == 0)] = "50 and younger"
+vec[which(vec == 1)] = "51 and older"
+
+data_clean3$over50str = vec
+
+# which(vec == 0)
+# 
+# df2$over50_str[] = df2$over50
+
+df = data_clean3 %>%
+  group_by("age group" = over50str) %>%
+  summarize(subjects = length(unique(sub)), "mean steps" = mean(TotalSteps), "mean relevance rating" = mean(na.omit(rating)))
+
+kable(df, digits=2, caption="Steps and Relevance Ratings by Age Group")
+
+```
+
+Figure 1 below shows that total steps taken does not seem to vary based on whether or not a message was received. This is true across genders. This may indicate that there is no significant difference between physical activity on days when health messages are received compared to when messages are not received.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=2}
+
+# ggplot(data_clean3, aes(x=msg_received, y=TotalSteps)) + 
+#   geom_boxplot() + ggtitle("Boxplot of TotalSteps vs. Msg_Received")
+
+ggplot(data_clean3, aes(x=gender, y=TotalSteps, fill=msg_received)) + 
+  geom_boxplot() + ggtitle("Figure 1: Total Steps vs. Gender, by Message Status") + xlab("") + ylab("Steps") + labs(fill="Message Received?")
+
+# p2 = ggplot(data_clean3, aes(x=over50, y=TotalSteps_norm, fill=msg_received)) + 
+#   geom_boxplot()
+# gridExtra::grid.arrange(p1, p2, nrow=2, ncol=1)
+```
+
+\pagebreak
+
+Similarly, Figure 2 additionally shows that on days when a message was received, total steps taken does not seem to vary based on whether the message was positive or negative. This is true across genders. This may indicate that there is no significant difference between physical activity on days when positive health messages are received compared to when negative messages are received.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=2}
+ggplot(data_clean3[data_clean3$msg_received == 1,], aes(x=gender, y=TotalSteps, fill=valence)) +
+  geom_boxplot() + ggtitle("Figure 2: Total Steps vs. Gender, by Valence") + xlab("") + ylab("Total Steps")
+
+# ggplot(data_clean3[data_clean3$msg_received == 1,], aes(x=gender, y=TotalSteps_norm, fill=type)) +
+#   geom_boxplot()
+```
+
+Figure 3 below shows that ratings of message relevance seem to vary based on whether a message is positive or negative. This effect appears slightly larger among females. This may indicate that adults find positive messages more personally relevant than negative messages, in accordance with the findings of Mikels et al., even if this might not manifest itself in increased physical activity. Note that we do not consider whether or not a message was received here, because they must have received a message that day in order to have provided a rating of relevance for the message.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=2}
+
+# ggplot(data_clean3[data_clean3$msg_received == 1,], aes(x=over50, y=rating, fill=type)) +
+#   geom_boxplot()
+
+ggplot(data_clean3[data_clean3$msg_received == 1,], aes(x=gender, y=rating, fill=valence)) +
+  geom_boxplot() + ggtitle("Figure 3: Relevance Rating vs. Gender, by Message Valence") + xlab("") + ylab("Relevance Rating")
+```
+
+In order to see if the results here were being skewed by differences in individual tendencies with respect to steps taken or ratings given, I created "normalized" versions of the total steps and message relevance rating variables by subtracting each participant's steps and ratings from their averages for that participant and then dividing the standard deviation. (For example, all data rows for subject 1011 would have total steps subtracted by the mean steps taken by subject 1011 across all days, and then this would be divided the standard deviation of total steps taken by subject 1011 across all days.) Plots produced with these normalized variables look generally the same and are provided in the Appendix for completeness. Normalized variables were not used in the models described below.
+
+As a final note, from both a line plot of subjects and an autocorrelation function plot, I also discovered potential correlation between subsequent days for measurements of total steps as part of my Exploratory Data Analysis (see Appendix for plots). I will investigate this autocorrelation in my models.
+
+## Modeling Number of Steps Taken
+
+```{r include=FALSE, cache=TRUE}
+model_data = data_clean3
+
+# Replace NA values in valence and s_ns with "none"
+model_data$valence = as.character(model_data$valence)
+model_data$s_ns = as.character(model_data$s_ns)
+
+model_data$valence[is.na(model_data$valence)] = "none"
+model_data$s_ns[is.na(model_data$s_ns)] = "none"
+
+# Make sure categorical predictors are factors
+model_data$valence = as.factor(model_data$valence)
+model_data$s_ns = as.factor(model_data$s_ns)
+model_data$type = as.factor(model_data$type)
+model_data <- within(model_data, type <- relevel(type, ref = "none"))
+
+model_data$sub = as.factor(model_data$sub)
+model_data$msg_received = as.factor(model_data$msg_received)
+
+temp = model_data %>%
+  group_by(sub) %>%
+  summarize(subj_age = median(age))
+temp$subj_age = as.numeric(temp$subj_age)
+
+model_data$age_uncent = model_data$age
+
+model_data$age = model_data$age - mean(temp$subj_age)
+```
+
+### Methods
+
+Since different subjects may have very different numbers of steps taken per day on average and data observations for a given subject are likely to be correlated, I fit several mixed-effects linear regression models with total steps as a response variable and subject as a random intercept (see Sensitivity Analysis below for other models). Here I describe my final model with gender, age, self-efficacy, and type of message received (if any) as fixed effects. In order to address the potential autocorrelation of steps taken between subsequent days, this model also includes two autoregressive predictors: the number of steps taken in the two days preceding any given data row. For days 1 and 2 of the study, I used baseline data from before the study began for the autoregressive data. The model equation is below.
+\begin{align*}
+y_{ij} &= \beta_0 + \alpha_j + \beta_1\textrm{genderMale}_j + \beta_2\textrm{age}_j + \beta_3\textrm{self-efficacy}_{ij} + \beta_4\textrm{msgNegNonsoc}_{ij} + \beta_5\textrm{msgNegSoc}_{ij} \\ 
+ & \hspace{0.5cm} + \beta_6\textrm{msgPosNonsoc}_{ij} + \beta_7\textrm{msgPosSoc}_{ij} + \beta_8y_{i-1,j} + \beta_9y_{i-2,j} + \epsilon_{ij}
+\end{align*}
+
+where $\alpha_j \sim N(0, \sigma^2_{\alpha})$, $\epsilon_{ij} \sim N(0, \sigma^2)$, $j$ is the subject index from 1 to 36, and $i$ is the observation index for a specific subject (starting at 1 and usually ending between 90 and 100, depending on the number of observations for the subject).
+
+### Results
+
+```{r include=FALSE}
+#data_time = model_data 
+#data_time$subj_day_num[is.na(data_time$subj_day_num)] = 0
+
+data_time = model_data
+acf_df = data.frame()
+
+for (sub_id in unique(data_time$sub)) {
+  subj_rows = data_time[data_time$sub==sub_id,]
+  
+  subj_rows$StepsLag1 = c(NA, subj_rows$TotalSteps[1:(nrow(subj_rows)-1)])
+  subj_rows$StepsLag1 = subj_rows$StepsLag1 - mean(subj_rows$StepsLag1, na.rm=TRUE)
+
+  subj_rows$StepsLag2 = c(NA, NA, subj_rows$TotalSteps[1:(nrow(subj_rows)-2)])
+  subj_rows$StepsLag2 = subj_rows$StepsLag2 - mean(subj_rows$StepsLag2, na.rm=TRUE)
+  
+  subj_rows$self_efficacy_lag = c(NA, subj_rows$self_efficacy_daily[1:(nrow(subj_rows)-1)])
+  subj_rows$self_efficacy_lag = subj_rows$self_efficacy_lag - mean(subj_rows$self_efficacy_lag, na.rm=TRUE)
+
+  
+  acf_df = rbind(acf_df, subj_rows)
+}
+acf_df$sub = as.factor(acf_df$sub)
+
+#model1 = lmer(TotalSteps ~ gender + age + self_efficacy_daily + msg_received + (1 | sub), data=model_data)
+
+acf_df$msg_received = as.factor(acf_df$msg_received)
+
+model1c = lmer(TotalSteps ~ gender + age + self_efficacy_daily + type + StepsLag1 + StepsLag2 + (1 | sub), data=acf_df)
+
+model1c_output = summary(model1c)
+model1c_output
+
+model1c_coefs = model1c_output$coefficients[,1:2]
+model1c_coefs = cbind(model1c_coefs, model1c_coefs[,1]-2*model1c_coefs[,2], model1c_coefs[,1]+2*model1c_coefs[,2])
+
+model1c_cols = colnames(model1c_coefs)
+model1c_cols[3:4] = c("95% CI Lower", "95% CI Upper")
+colnames(model1c_coefs) = model1c_cols
+
+variance_vals = lme4::VarCorr(model1c, comp="Variance")
+variance_df = data.frame(variance_vals)
+sigma_sq = variance_df[variance_df$grp=="Residual", "vcov"]
+sigma_sq_alpha = variance_df[variance_df$grp=="sub", "vcov"]
+icc = sigma_sq_alpha / (sigma_sq_alpha + sigma_sq)
+
+rownames(model1c_coefs) = c("(Intercept)", "male", "age", "self efficacy", "negative nonsocial", "negative social", "positive nonsocial", "positive social", "1-day lagged steps", "2-day lagged steps")
+```
+
+```{r echo=FALSE}
+kable(model1c_coefs, digits=4, caption="Coefficients for Steps Model")
+```
+
+The fitted residual variance $\sigma^2$ is `r format(round(sigma_sq, 2), scientific=FALSE)`, the random effect variance $\sigma^2_{\alpha}$ is `r format(round(sigma_sq_alpha, 2), scientific=FALSE)`, and the intraclass correlation $\frac{\sigma^2_{\alpha}}{\sigma^2_{\alpha} + \sigma^2}$ is `r round(icc, 2)`. (These variances seem large, but their square roots are in the range of 3500, which is not an unreasonable standard deviation when participants generally take around 10000 steps per day based on the Exploratory Data Analysis.)
+
+Surprisingly, according to this model, it looks like receiving some types of messages actually made people take fewer steps than they would have compared to the baseline of not receiving a message at all. All else being held constant, receiving a negative social message or a positive nonsocial message reduces a participant's expected number of steps by around 500 (with a 95% confidence interval from around -925 steps to -100 steps in both cases). For other message types, the negative effect of receiving the message on number of steps taken does not appear to be significant. Age and gender are not significant predictors of number of steps taken.
+
+Self-efficacy appears to impact steps taken in a significant way; if someone rates themself one point higher on the self-efficacy scale, we expect them to take around 430 more steps (with a 95% confidence interval of 368 to 496 added steps). The autoregressive coefficients are significant, although they do not have a huge effect. If yesterday a subject took 1000 more steps than their average, their expected number of steps today would increase by around 155. If two days ago they took 1000 more steps than their average, their expected number of steps today would increase by around 86.
+
+This model shows no concerning pattern in its residual plot, which is included in the Appendix.
+
+## Modeling Message Relevance Ratings
+
+### Methods
+
+It appears from the model above that receipt of a message, regardless of its type, did not cause participants in this study to take more steps. In spite of this, I am also interested in whether or not participants rate different messages as being more relevant than others.
+
+My first approach to answering this question was to fit a linear mixed-effects model with message relevance rating as the response variable. Unlike the models for steps, these models only utilize data rows where a message was received (because otherwise there is no message rating, since there was no message to rate that day). The model (output in Appendix) found that holding all else constant, positive messages were correlated with higher message ratings than negative messages. While social messages showed no significant difference from nonsocial messages when the message is negative, a social component seems to be correlated with lower message ratings for positive messages. Age and gender had no effect. While this model provided some basic results to think about, it is clear that since the response variable is an ordinal rating between 0 and 10 (inclusive) it is not a natural fit for linear regression.
+
+In an effort to find a model that fit the data more naturally, I created a new binary response variable to indicate whether or not a rating is higher than the average of all ratings over all days, which is around 6.5. Since ratings are whole numbers, this means that all ratings of 6 and lower get a 0 indicator variable and the ratings 7 and higher get a 1. I then fit a hierarchical logistic regression model with this indicator as the response.
+$$
+\textrm{logit}(\mathbb{E}[y_{ij} \mid b_j]) = \beta_0 + b_j + \beta_1\textrm{male}_j + \beta_2\textrm{age}_j + \beta_3\textrm{positive}_{ij} + \beta_4\textrm{social}_{ij} + \beta_5\textrm{positive:social}_{ij}
+$$
+
+where $b_j \sim N(0, \sigma^2)$, $j$ is the subject index from 1 to 36, and $i$ is the observation index for a specific subject (starting at 1 and usually ending between 90 and 100, depending on the number of observations for the subject). Since a message is always received in this model, it made more sense to have separate predictors for whether a message is "positive" or "social" plus an interaction term rather than using one combined message type predictor like in the steps model.
+
+\pagebreak
+
+### Results
+
+```{r include=FALSE}
+data_no_na = model_data %>% drop_na(rating, self_efficacy_daily)
+data_no_na$rating = as.numeric(data_no_na$rating)
+
+data_no_na$ratingAboveAvg = (data_no_na$rating > mean(data_no_na$rating))*1
+
+model3 = glmer(ratingAboveAvg ~ gender + age + valence + s_ns + valence*s_ns + (1 | sub), family="binomial", data=data_no_na)
+
+model3_output = summary(model3)
+model3_output
+
+model3_coefs = model3_output$coefficients[,1:2]
+model3_coefs = cbind(model3_coefs, model3_coefs[,1]-2*model3_coefs[,2], model3_coefs[,1]+2*model3_coefs[,2])
+
+model3_cols = colnames(model3_coefs)
+model3_cols[3:4] = c("95% CI Lower", "95% CI Upper")
+colnames(model3_coefs) = model3_cols
+
+variance_vals2 = lme4::VarCorr(model3, comp="Variance")
+variance_df2 = data.frame(variance_vals2)
+sigma_sq2 = variance_df2[variance_df2$grp=="sub", "vcov"]
+icc2 = sigma_sq2 / (sigma_sq2 + (pi^2 / 3))
+
+rownames(model3_coefs) = c("(Intercept)", "male", "age", "positive", "social", "positive:social")
+```
+
+```{r echo=FALSE}
+kable(model3_coefs, digits=4, caption="Coefficients for Message Ratings Model")
+```
+
+The fitted random effect variance $\sigma^2$ is `r format(round(sigma_sq2, 2), scientific=FALSE)`, and the intraclass correlation $\frac{\sigma^2}{\sigma^2 + \frac{\pi^2}{3}}$ is `r round(icc2, 2)`.
+
+Like the linear regression model, this model also found that holding all else constant, positive messages were correlated with higher message ratings than negative messages. For instance, for a given subject and holding all else constant, receiving a positive message compared to the baseline of a negative message multiplies the odds of giving an above-average rating by $e^{1.07} \approx 2.9$ (with a 95% confidence interval of $e^{0.81} \approx 2.25$ to $e^{1.32} \approx 3.74$ multiplicative change in odds). Social messages technically showed no significant difference from the baseline of nonsocial messages regardless of whether the message was negative or positive. However, the effect of a social component on positive messages is very nearly significant, so it is possible that a social component reduces the likelihood of an above-average rating for positive messages only. Age and gender had no significant effect on message relevance ratings.
+
+The binned Pearson residuals (included in the Appendix) generally look good, so this model seems to be a decent fit for the data. 
+
+
+## Model Validation
+
+```{r steps-validation, include=FALSE}
+validation_df = acf_df
+last_msg_cols = which(validation_df$subj_day_num==78)
+
+validation_train = validation_df[-last_msg_cols,]
+validation_test = validation_df[last_msg_cols,]
+#length(unique(validation_df$sub))
+
+model_val = lmer(TotalSteps ~ gender + age + self_efficacy_daily + type + StepsLag1 + StepsLag2 + (1 | sub), data=validation_train)
+
+#summary(model_val)
+
+val_preds = predict(model_val, validation_test)
+no_na = which(!(is.na(val_preds)))
+val_preds = val_preds[no_na]# %>% drop_na(val_preds)
+validation_test_no_na = validation_test[no_na,]
+
+val_resid = val_preds - validation_test_no_na$TotalSteps
+val_rmse = sqrt( mean( val_resid^2 ) )
+```
+
+To validate my model for number of steps taken, I removed Day 78 of the study from every participant, then trained the model on the dataset with Day 78 removed and used the remaining data to make out-of-sample predictions. (I originally wanted to use the last day of the study, Day 80, but several participants were missing data for that day.) For these predictions, the root mean squared error was `r round(val_rmse, 2)`. Most days, participants took somewhere around 10000 steps (from Exploratory Data Analysis), so this error is not too large compared to the number of steps taken. Additionally, a plot of the residuals of these predictions against their predicted values (included in the Appendix) shows little of concern besides a couple of points with high predicted values and extraneously high residuals.
+
+```{r ratings-validation, include=F}
+data_val2 = data_no_na
+last_msg_cols = which(data_val2$subj_day_num==78)
+
+val2_train = data_val2[-last_msg_cols,]
+val2_test = data_val2[last_msg_cols,]
+
+model_val2 = glmer(ratingAboveAvg ~ gender + age + valence + s_ns + valence*s_ns + (1 | sub), family="binomial", data=data_val2)
+
+val2_pred_probs = predict(model_val2, val2_test, type="response")
+val2_preds = (val2_pred_probs >= 0.5)*1
+no_na = which(!(is.na(val2_preds)))
+val2_preds = val2_preds[no_na]# %>% drop_na(val_preds)
+val2_test_no_na = val2_test[no_na,]
+
+conf_mat_obj = caret::confusionMatrix(as.factor(val2_preds), as.factor(val2_test$ratingAboveAvg))
+conf_mat = conf_mat_obj$table
+colnames(conf_mat) = c("Actual 0", "Actual 1")
+rownames(conf_mat) = c("Predicted 0", "Predicted 1")
+#as.numeric(conf_mat_obj$overall[1])
+```
+
+For message relevance ratings, I once again removed Day 78 for each participant, re-trained the model, and then made out-of-sample predictions. The predictive accuracy is good (`r round(as.numeric(conf_mat_obj$overall[1]), 3)`) and the confusion matrix below shows a satisfactory balance between precision and recall:
+
+```{r echo=F}
+kable(conf_mat, caption="Message Ratings Model Confusion Matrix")
+```
+
+
+## Sensitivity Analysis
+
+For modeling the number of steps taken, I fit a model where I incorporated the subject day number as a fixed effect as well as interactions of the subject day number with age and gender, respectively. For this model, I used only data rows corresponding to days where a message was received by the participant. None of the additional terms were significant predictors of number of steps taken, and self-efficacy remained a significant predictor (see output in the Appendix). This suggests that there is not much of a change in the effect of the messages over the course of the study. I also fit yet another model with a delayed self-efficacy predictor to see if self-efficacy from the previous day predicted number of steps taken, but it was not a significant predictor (see output in the Appendix). Once again, the same predictors remained significant and had comparable effects to those observed in the main model.
+
+For modeling message ratings, rather than reducing the response variable down to a binary above/below average indicator, a more natural model fit would let us keep multiple categories of the response variable. In order to see if this changed the results, I fit a hierarchical proportional-odds ordinal regression model. This model tries to fit "thresholds" between the different ordinal response categories, and a key model assumption is that these thresholds do not change with different values of the predictor variables. To meet this proportional-odds assumption, I tried multiple splits of the response variable into binned categories and chose one that met this assumption (assumption check and model output shown in Appendix). A split of the response variable that worked well was 0-6, 7-9, and 10, although using 0-5 and 6-9 for the first two splits works as well. I also had to change age from a continuous predictor to a binary indicator of whether the participant was over the age of 50 in order to meet the model assumption. The model equation is as follows:
+
+$$
+\textrm{logit}(\gamma_{ijk}) = \textrm{log}\left( \frac{\mathbb{P}(Y_i \leq j)}{1 - \mathbb{P}(Y_i \leq j)}\right)
+$$
+
+where $\gamma_{ijk} = F(\eta_{ijk})$, $F$ is the inverse link function (in this case, the inverse-logit), and
+$$
+\eta_{ijk} = \theta_k - b_j - \beta_1\textrm{male}_j- \beta_2\textrm{ageOver50}_j - \beta_3\textrm{positive}_{ij} - \beta_4\textrm{social}_{ij} - \beta_5\textrm{positive:social}_{ij}
+$$
+
+$j$ is the subject index from 1 to 36, and $i$ is the observation index for a specific subject (starting at 1 and usually ending between 90 and 100, depending on the number of observations for the subject), and $k$ is the response group index 1, 2, or 3.
+
+```{r include=FALSE}
+data_no_na = model_data %>% drop_na(rating, self_efficacy_daily)
+data_no_na$rating = as.factor(data_no_na$rating)
+
+data_factor = data_no_na
+
+data_test = data_factor
+#data_test$sub = as.factor(data_test$sub)
+data_test$rating = as.numeric(data_test$rating)-1
+
+data_test$rating_group = cut(data_test$rating, c(-1, 6, 9, 10))
+#data_test$rating_group = cut(data_test$rating, c(-1, 7, 9, 10))
+
+#data_test$ratingGroup = (data_test$rating < 5)*1
+#data_test$ratingGroup = ((data_test$rating >= 5)&(data_test$rating > 10))*2
+
+model4b = clmm(rating_group ~ gender + over50 + valence + s_ns + valence*s_ns + (1 | sub), data=data_test)
+
+#summary(model4b)
+#nominal_test(model4b)
+model4b_output = summary(model4b)
+model4b_output
+
+model4b_coefs = model4b_output$coefficients[,1:2]
+model4b_coefs = cbind(model4b_coefs, model4b_coefs[,1]-2*model4b_coefs[,2], model4b_coefs[,1]+2*model4b_coefs[,2])
+
+model4b_cols = colnames(model4b_coefs)
+model4b_cols[3:4] = c("95% CI Lower", "95% CI Upper")
+colnames(model4b_coefs) = model4b_cols
+
+rownames(model4b_coefs) = c(rownames(model4b_coefs)[1:2], c("male", "over age 50", "positive", "social", "positive:social"))
+
+```
+
+```{r echo=FALSE}
+kable(model4b_coefs[3:nrow(model4b_coefs),], digits=4, caption="Coefficients for Prop-Odds Message Ratings Model")
+```
+
+From this model, we again see that compared to the baseline of negative (nonsocial) messages, positive messages predicted higher message ratings, while social messages showed no significant difference for negative messages but had a negative impact for positive messages. Age and gender also had no effect.
+
+The ordinal package provides a built-in function to test whether or not the "proportional odds" assumption, or the assumption that the thresholds do not change with the predictor variables, is satisfied. However, the test does not work for hierarchical proportional odds models. Instead, I removed the random intercept for subject in order to run the test. When doing so the proportional odds assumption was satisfied (see Appendix). This is not an uncommon way to test the assumption in this case. [3]
+
+As an additional sanity check, we see (in the Appendix) that removing the random intercept did not change the coefficients of the model too much, but it did change the standard errors and significance of the demographic variables, which are significant in the fixed effects model but not in the mixed-effects model. This makes sense because the variation that appeared to be between genders and ages in the fixed effects model was attributable to differences between subjects.
+
+Overall, the results for this model were comparable to the logistic model in terms of significant predictors and their effects. In spite of its more natural fit to the data, the proportional-odds model is harder to interpret than logistic regression, so I did not choose it as my main model.
+
+
+## Discussion
+
+My goal was to use the data from this study in the Duke MCAB Lab to gain understanding about the relevance of health messages to adults and the effects of health messaging and self-efficacy on physical activity. My primary focus was the effect of the type of message received on self-reported message relevance and number of steps taken per day. I also wanted to see if there was a discrepancy between the two. Recent work in the Psychology/Neuroscience community has shown that adults are often more motivated by social rewards and positively-framed messages compared to negatively-framed messages or messages without a social component (Mikels et al. 2016), so I was also interested in whether or not these phenomena would be observed in this dataset.
+
+I found that the adult participants in this study were more likely to give positive health messages an above-average relevance rating compared to negative health messages, consistent with prior findings. However, the effect of social components to messages was small; if anything, it seems that social components reduce the likelihood of a positive message receiving a high relevance rating. In terms of number of steps taken by participants, receiving a message did not seem to motivate participants to take more steps; in fact, the opposite was true. On the other hand, higher self-efficacy ratings seem to result in a participant taking more steps. Additionally, there is a notable amount of heterogeneity between different participants when it comes to both steps taken and message ratings (see random intercepts for both models in the Appendix), and both measures are somewhat correlated for each participant (intraclass correlation of `r round(icc, 2)` for steps and `r round(icc2, 2)` for message ratings).
+
+The data collection process for this study introduces some limitations that are worth noting. Study participants are instructed to wear their FitBit at almost all times (except when doing things like bathing), but we cannot be sure if participants actually did this. So, if a participant's data indicates that they were unusually inactive on a given day, it could be the case that they just forgot to wear their FitBit for part of that day. Since we have no way of knowing if this was the case, I uniformly assumed that participants' daily step data during the duration of the study is accurate. Furthermore, the data that we have is only at the day-by-day granularity. The FitBit separates days at midnight, so the steps taken in one day correspond to steps taken within 24 hours of midnight when the calendar changes to that day. We have no way of knowing if this is a reasonable split point or if some participants are being very active after midnight and having this data tacked on to the next day. However, the average age of study participants is around 47-48 so I would guess that most of their walking occurs before midnight. Either way, this splitting is handled in a uniform manner by the FitBit itself and so I have no further breakdown of the data by hour in a way that would allow me to handle this.
+
+Even with these limitations, the major takeaways from this analysis are that while adults may find positive health-related messages to be more personally relevant (as found in prior studies), these messages are not necessarily effective at motivating lifestyle changes with respect to physical activity. In contrast to prior work, I did not observe that social components to messages had a positive effect on message relevance; rather, the effect seemed to be negligible or even negative for messages that are positively-framed. Somewhat unsurprisingly, participants had notably different tendencies when it came to both steps taken and message ratings. While health messages did not motivate an increase in physical activity in this study as it was perhaps expected, there are still interesting directions for future research in this vein. For example, more studies can be done with regards to the relationship between self-efficacy and physical activity, perhaps using messages that are meant to boost self-efficacy in an effort to promote mental well-being and, by extension, physical activity.
+
+\pagebreak
+
+## Citations
+
+[1] Gerber, Ben S et al. “Mobile Phone Text Messaging to Promote Healthy Behaviors and Weight Loss Maintenance: A Feasibility Study.” *Health Informatics Journal* vol. 15,1 (2009): 17-25. doi:10.1177/1460458208099865
+
+[2] Mikels, Joseph A et al. “Messages That Matter: Age Differences in Affective Responses to Framed Health Messages.” *Psychology and Aging* vol. 31,4 (2016): 409-14. doi:10.1037/pag0000040
+
+[3] Mangiafico, S.S. "Summary and Analysis of Extension Program Evaluation in R." version 1.18.1. (2016): rcompanion.org/handbook/
+
+[4] Kraus, William E., et al. “Daily Step Counts for Measuring Physical Activity Exposure and Its Relation to Health.” *Medicine & Science in Sports & Exercise*, vol. 51, no. 6 (2019): pp. 1206–1212. doi:10.1249/mss.0000000000001932. 
+
+[5] Pillay, Julian D, et al. “The Association between Daily Steps and Health, and the Mediating Role of Body Composition: a Pedometer-Based, Cross-Sectional Study in an Employed South African Population.” *BMC Public Health* vol. 15, no. 1 (2015). doi:10.1186/s12889-015-1381-6.
+
+[6] Chaumeton, Nigel, et al. “A Measurement Model of Youth Physical Activity Using Pedometer and Self, Parent, and Peer Reports.” *International Journal of Behavioral Medicine*, vol. 18, no. 3 (2010): pp. 209–215. doi:10.1007/s12529-010-9118-5. 
+
+\pagebreak
+
+## Appendix
+
+### Age and Gender T-Test
+
+```{r echo=FALSE, warning=FALSE}
+t.test(demographics_by_sub$age~demographics_by_sub$gender)
+```
+
+### Histograms of Response Variables
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=4}
+plot1 = ggplot(data_clean3, aes(x=TotalSteps)) + geom_histogram() + ggtitle("Histogram of Daily Total Steps") + ylab("frequency") + xlab("Total Steps")
+
+plot2 = ggplot(data_clean3, aes(x=rating)) + geom_histogram(bins=11) + ggtitle("Histogram of Health Message Relevance") + ylab("frequency")  +scale_x_continuous(breaks=seq(0, 10, by=1), labels=seq(0, 10, by=1))
+
+gridExtra::grid.arrange(plot1, plot2, nrow=2, ncol=1)
+```
+
+\pagebreak
+
+### Normalized Boxplots
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=2}
+
+# ggplot(data_clean3, aes(x=msg_received, y=TotalSteps)) + 
+#   geom_boxplot() + ggtitle("Boxplot of TotalSteps vs. Msg_Received")
+
+ggplot(data_clean3, aes(x=gender, y=TotalSteps_norm, fill=msg_received)) + 
+  geom_boxplot() + ggtitle("Normalized Total Steps vs. Gender, by Message Status") + xlab("") + ylab("Normalized Total Steps") + labs(fill="Message Received?")
+
+# p2 = ggplot(data_clean3, aes(x=over50, y=TotalSteps_norm, fill=msg_received)) + 
+#   geom_boxplot()
+# gridExtra::grid.arrange(p1, p2, nrow=2, ncol=1)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=2}
+ggplot(data_clean3[data_clean3$msg_received == 1,], aes(x=gender, y=TotalSteps_norm, fill=valence)) +
+  geom_boxplot() + ggtitle("Normalized Total Steps vs. Gender, by Message Valence") + xlab("") + ylab("Normalized Total Steps")
+
+# ggplot(data_clean3[data_clean3$msg_received == 1,], aes(x=gender, y=TotalSteps_norm, fill=type)) +
+#   geom_boxplot()
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=2}
+
+# ggplot(data_clean3[data_clean3$msg_received == 1,], aes(x=over50, y=rating, fill=type)) +
+#   geom_boxplot()
+
+ggplot(data_clean3[data_clean3$msg_received == 1,], aes(x=gender, y=rating_norm, fill=valence)) +
+  geom_boxplot() + ggtitle("Normalized Relevance Rating vs. Gender, by Valence") + xlab("") + ylab("Normalized Rating")
+```
+
+### Total Steps Autocorrelation Plots
+
+```{r, echo=FALSE, cache=F, fig.height=4}
+data_more = data_clean3 %>% drop_na(subj_day_num)
+data_more$sub = as.factor(data_more$sub)
+data_1007 = data_more[data_more$sub %in% c("1051", "1011"),]
+
+
+ggplot(data=data_1007, aes(x=subj_day_num, y=TotalSteps, group=sub, color=sub)) + geom_line() + ggtitle("Total Steps Over Time for Subjects 1011 and 1051") + xlab("Subject Day #") + ylab("Total Steps") +labs(color="subject")
+
+x = acf(data_more[data_more$sub == "1011",]$TotalSteps, plot=FALSE)
+plot(x, main="Total Steps Autocorrelation for Subject 1011")
+#pacf(data_more[data_more$sub == "1011",]$TotalSteps)
+```
+
+\pagebreak
+
+### Total Steps Main Model Residuals
+
+```{r echo=FALSE, fig.height=3}
+#res = model1_output$residuals
+#preds = predict(model1, model1_data)
+plot(model1c, xlab="Fitted Values", ylab="Pearson Residuals", main="Pearson Residuals vs. Fitted Values")
+```
+
+### Relevance Rating Main Model Residuals
+
+```{r echo=FALSE, fig.height=3.5}
+resid = residuals(model3,type="pearson")
+
+fitted = predict(model3, data_no_na, type="response")
+test = 
+
+data_no_na_aug = cbind(data_no_na, resid, fitted)
+
+
+# ggplot(data_no_na_aug, aes(x=age,y=resid)) + geom_point() + theme_bw()
+
+arm::binnedplot(x = data_no_na_aug$fitted, y = data_no_na_aug$resid,
+                xlab = "Predicted Probabilities",
+                ylab = "Average Pearson Residuals",
+                main = "Binned Pearson Residuals vs. Predicted Probabilities",
+                col.int = FALSE)
+
+# data_no_na_aug %>%
+#   group_by(gender) %>%
+#   summarise(mean_resid = mean(resid))
+
+
+#plot(model3)
+```
+
+\pagebreak
+
+### Random Intercepts for Main Models
+
+The table below shows the random intercepts for each participant in the study for the main steps model and the main message ratings model. For both models, these intercepts include the global intercept coefficient $\beta_0$ added in.
+
+```{r include=FALSE}
+steps_coefs = data.frame(coef(model1c)$sub)
+ratings_coefs = data.frame(coef(model3)$sub)
+
+steps_coefs2 = steps_coefs[rownames(ratings_coefs),]
+
+randint_df = cbind(steps_coefs2$X.Intercept., ratings_coefs$X.Intercept.)
+rownames(randint_df) = rownames(ratings_coefs)
+colnames(randint_df) = c("Steps Intercept", "Ratings Intercept")
+```
+
+```{r echo=F}
+kable(randint_df, digits=4)
+```
+
+\pagebreak
+
+### Total Steps Validation Residuals
+
+```{r echo=F, fig.height=3.1}
+plot(val_preds, val_resid, xlab="Fitted Values", ylab="Pearson Residuals", main="Validation: Pearson Residuals vs. Fitted Values")
+abline(h=0)
+```
+
+<!-- Prep for sensitivity analysis -->
+
+```{r include=FALSE}
+#data_time = model_data 
+#data_time$subj_day_num[is.na(data_time$subj_day_num)] = 0
+
+data_time = model_data[model_data$msg_received == 1,]
+acf_df = data.frame()
+
+for (sub_id in unique(data_time$sub)) {
+  subj_rows = data_time[data_time$sub==sub_id,]
+  
+  subj_rows$StepsLag1 = c(NA, subj_rows$TotalSteps[1:(nrow(subj_rows)-1)])
+  subj_rows$StepsLag1 = subj_rows$StepsLag1 - mean(subj_rows$StepsLag1, na.rm=TRUE)
+
+  subj_rows$StepsLag2 = c(NA, NA, subj_rows$TotalSteps[1:(nrow(subj_rows)-2)])
+  subj_rows$StepsLag2 = subj_rows$StepsLag2 - mean(subj_rows$StepsLag2, na.rm=TRUE)
+  
+  acf_df = rbind(acf_df, subj_rows)
+}
+acf_df$sub = as.factor(acf_df$sub)
+
+#model1 = lmer(TotalSteps ~ gender + age + self_efficacy_daily + msg_received + (1 | sub), data=model_data)
+
+acf_df$msg_received = as.factor(acf_df$msg_received)
+
+# model1c = lmer(TotalSteps ~ gender + age + self_efficacy_daily + msg_received + (1 | sub), data=acf_df)
+# 
+# model1c_output = summary(model1c)
+# model1c_output
+# 
+# model1c_coefs = model1c_output$coefficients[,1:2]
+# model1c_coefs = cbind(model1c_coefs, model1c_coefs[,1]-2*model1c_coefs[,2], model1c_coefs[,1]+2*model1c_coefs[,2])
+# 
+# model1c_cols = colnames(model1c_coefs)
+# model1c_cols[3:4] = c("95% CI Lower", "95% CI Upper")
+# colnames(model1c_coefs) = model1c_cols
+
+
+```
+
+<!-- ### Total Steps Mixed Model Without Message Type -->
+
+```{r include=FALSE}
+#data_time = model_data 
+#data_time$subj_day_num[is.na(data_time$subj_day_num)] = 0
+
+data_time = model_data
+acf_df = data.frame()
+
+for (sub_id in unique(data_time$sub)) {
+  subj_rows = data_time[data_time$sub==sub_id,]
+  
+  subj_rows$StepsLag1 = c(NA, subj_rows$TotalSteps[1:(nrow(subj_rows)-1)])
+  subj_rows$StepsLag1 = subj_rows$StepsLag1 - mean(subj_rows$StepsLag1, na.rm=TRUE)
+
+  subj_rows$StepsLag2 = c(NA, NA, subj_rows$TotalSteps[1:(nrow(subj_rows)-2)])
+  subj_rows$StepsLag2 = subj_rows$StepsLag2 - mean(subj_rows$StepsLag2, na.rm=TRUE)
+  
+  subj_rows$self_efficacy_lag = c(NA, subj_rows$self_efficacy_daily[1:(nrow(subj_rows)-1)])
+  subj_rows$self_efficacy_lag = subj_rows$self_efficacy_lag - mean(subj_rows$self_efficacy_lag, na.rm=TRUE)
+  
+  acf_df = rbind(acf_df, subj_rows)
+}
+acf_df$sub = as.factor(acf_df$sub)
+
+#model1 = lmer(TotalSteps ~ gender + age + self_efficacy_daily + msg_received + (1 | sub), data=model_data)
+
+acf_df$msg_received = as.factor(acf_df$msg_received)
+
+model1d = lmer(TotalSteps ~ gender + age + self_efficacy_daily + msg_received + (1 | sub), data=acf_df)
+
+model1d_output = summary(model1d)
+model1d_output
+
+model1d_coefs = model1d_output$coefficients[,1:2]
+model1d_coefs = cbind(model1d_coefs, model1d_coefs[,1]-2*model1d_coefs[,2], model1d_coefs[,1]+2*model1d_coefs[,2])
+
+model1d_cols = colnames(model1d_coefs)
+model1d_cols[3:4] = c("95% CI Lower", "95% CI Upper")
+colnames(model1d_coefs) = model1d_cols
+
+
+```
+
+```{r include=FALSE, echo=FALSE}
+kable(model1d_coefs)
+```
+
+### Total Steps Mixed Model with Day Number and Interactions
+
+```{r include=FALSE}
+#data_time = model_data 
+#data_time$subj_day_num[is.na(data_time$subj_day_num)] = 0
+
+data_time = model_data[model_data$msg_received == 1,]
+
+model1b = lmer(TotalSteps ~ gender + age + self_efficacy_daily + subj_day_num + subj_day_num*gender + subj_day_num*age + (1 | sub), data=data_time)
+
+model1b_output = summary(model1b)
+model1b_output
+
+model1b_coefs = model1b_output$coefficients[,1:2]
+model1b_coefs = cbind(model1b_coefs, model1b_coefs[,1]-2*model1b_coefs[,2], model1b_coefs[,1]+2*model1b_coefs[,2])
+
+model1b_cols = colnames(model1b_coefs)
+model1b_cols[3:4] = c("95% CI Lower", "95% CI Upper")
+colnames(model1b_coefs) = model1b_cols
+
+rownames(model1b_coefs) = c("(Intercept)", "male", "age", "self efficacy", "subject day #", "male:subject day #", "age:subject day #")
+
+```
+
+```{r echo=FALSE}
+kable(model1b_coefs)
+```
+
+### Total Steps Mixed Model with Self-Efficacy Lag
+
+```{r include=FALSE}
+model1c_alt = lmer(TotalSteps ~ gender + age + self_efficacy_daily + type + StepsLag1 + StepsLag2 + self_efficacy_lag + (1 | sub), data=acf_df)
+
+model1c_alt_output = summary(model1c_alt)
+model1c_alt_output
+
+model1c_alt_coefs = model1c_alt_output$coefficients[,1:2]
+model1c_alt_coefs = cbind(model1c_alt_coefs, model1c_alt_coefs[,1]-2*model1c_alt_coefs[,2], model1c_alt_coefs[,1]+2*model1c_alt_coefs[,2])
+
+model1c_alt_cols = colnames(model1c_alt_coefs)
+model1c_alt_cols[3:4] = c("95% CI Lower", "95% CI Upper")
+colnames(model1c_alt_coefs) = model1c_alt_cols
+
+rownames(model1c_alt_coefs) = c("(Intercept)", "male", "age", "self efficacy", "negative nonsocial", "negative social", "positive nonsocial", "positive social", "1-day lagged steps", "2-day lagged steps", "1-day lagged self efficacy")
+
+```
+
+```{r echo=FALSE}
+kable(model1c_alt_coefs)
+```
+
+\pagebreak
+
+### Relevance Rating Linear Mixed Model
+
+```{r cache=TRUE, include=FALSE}
+data_no_na = model_data %>% drop_na(rating)
+data_no_na$rating = as.numeric(data_no_na$rating)
+
+model2 = lmer(rating ~ gender + age + valence + s_ns + valence*s_ns + (1 | sub), data=data_no_na)
+
+model2_output = summary(model2)
+model2_output
+
+model2_coefs = model2_output$coefficients[,1:2]
+model2_coefs = cbind(model2_coefs, model2_coefs[,1]-2*model2_coefs[,2], model2_coefs[,1]+2*model2_coefs[,2])
+
+model2_cols = colnames(model2_coefs)
+model2_cols[3:4] = c("95% CI Lower", "95% CI Upper")
+colnames(model2_coefs) = model2_cols
+
+rownames(model2_coefs) = c("(Intercept)", "male", "age", "positive", "social", "positive:social")
+
+```
+
+```{r echo=FALSE}
+kable(model2_coefs)
+```
+
+### Relevance Rating Fixed Effects Prop-Odds Model for Checking Assumptions
+
+```{r, cache=TRUE, echo=FALSE}
+data_test = data_factor
+#data_test$sub = as.factor(data_test$sub)
+data_test$rating = as.numeric(data_test$rating)-1
+
+data_test$rating_group = cut(data_test$rating, c(-1, 6, 9, 10))
+#data_test$rating_group = cut(data_test$rating, c(-1, 7, 9, 10))
+
+#data_test$ratingGroup = (data_test$rating < 5)*1
+#data_test$ratingGroup = ((data_test$rating >= 5)&(data_test$rating > 10))*2
+model4b = clm(rating_group ~ gender + over50 + valence + s_ns + valence*s_ns, data=data_test)
+
+summary(model4b)
+nominal_test(model4b)
+```
+
