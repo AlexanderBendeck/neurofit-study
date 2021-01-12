@@ -56,6 +56,8 @@ def formatDate(date):
     YYYY/MM/DD to match surveys and SMS data
     '''
     m, day, yr = date.split("/")
+    if len(yr) < 4:
+        yr = '20' + yr
     if len(m) < 2:
         m = '0'+m
     if len(day) < 2:
