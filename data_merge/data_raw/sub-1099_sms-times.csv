@@ -1,241 +1,241 @@
-,timestamp,unix_timestamp,sub,phone,valence,s_ns,id,message,combined_msg
-0,2019-12-12 09:08:00,1576159680,1099,19193330062,negative,social,420,"""Physical inactivity can lead to low bone density and osteoporosis. Being confined to a wheelchair will make it harder for you to get around and spend time with loved ones.""","""Physical inactivity can lead to low bone density and osteoporosis. Being confined to a wheelchair will make it harder for you to get around and spend time with loved ones. 
+Unnamed: 0,timestamp,unix_timestamp,sub,valence,s_ns,id,message,combined_msg
+0,2019-12-12 09:08:00,1576159680,1099,negative,social,420,"""Physical inactivity can lead to low bone density and osteoporosis. Being confined to a wheelchair will make it harder for you to get around and spend time with loved ones.""","""Physical inactivity can lead to low bone density and osteoporosis. Being confined to a wheelchair will make it harder for you to get around and spend time with loved ones. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-1,2019-12-13 09:12:00,1576246320,1099,19193330062,positive,nonsocial,117,"""Being active at any age has overall health benefits and can lengthen your life. It is never too late or too early to start being active.""","""Being active at any age has overall health benefits and can lengthen your life. It is never too late or too early to start being active. 
+1,2019-12-13 09:12:00,1576246320,1099,positive,nonsocial,117,"""Being active at any age has overall health benefits and can lengthen your life. It is never too late or too early to start being active.""","""Being active at any age has overall health benefits and can lengthen your life. It is never too late or too early to start being active. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-2,2019-12-14 08:19:00,1576329540,1099,19193330062,negative,nonsocial,206,"""Inadequate levels of physical activity increase the risk of falls as well as hip or vertebral fractures.""","""Inadequate levels of physical activity increase the risk of falls as well as hip or vertebral fractures. 
+2,2019-12-14 08:19:00,1576329540,1099,negative,nonsocial,206,"""Inadequate levels of physical activity increase the risk of falls as well as hip or vertebral fractures.""","""Inadequate levels of physical activity increase the risk of falls as well as hip or vertebral fractures. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-3,2019-12-15 08:51:00,1576417860,1099,19193330062,positive,social,305,"""Remaining physically active at any age can help prevent osteoporosis, a common disease that occurs as bones thin with age. Think about maintaining your mobility because it allows you to spend time with your loved ones even as you age.""","""Remaining physically active at any age can help prevent osteoporosis, a common disease that occurs as bones thin with age. Think about maintaining your mobility because it allows you to spend time with your loved ones even as you age. 
+3,2019-12-15 08:51:00,1576417860,1099,positive,social,305,"""Remaining physically active at any age can help prevent osteoporosis, a common disease that occurs as bones thin with age. Think about maintaining your mobility because it allows you to spend time with your loved ones even as you age.""","""Remaining physically active at any age can help prevent osteoporosis, a common disease that occurs as bones thin with age. Think about maintaining your mobility because it allows you to spend time with your loved ones even as you age. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-4,2019-12-16 09:47:00,1576507620,1099,19193330062,positive,social,319,"""In a bad mood? Try taking a walk with a friend! Walking has been shown to help you clear your mind and improve your mood.""","""In a bad mood? Try taking a walk with a friend! Walking has been shown to help you clear your mind and improve your mood. 
+4,2019-12-16 09:47:00,1576507620,1099,positive,social,319,"""In a bad mood? Try taking a walk with a friend! Walking has been shown to help you clear your mind and improve your mood.""","""In a bad mood? Try taking a walk with a friend! Walking has been shown to help you clear your mind and improve your mood. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-5,2019-12-17 07:20:00,1576585200,1099,19193330062,positive,social,318,"""Being physically active can make daily tasks easier to perform, leaving you with more energy to spend time with friends and family.""","""Being physically active can make daily tasks easier to perform, leaving you with more energy to spend time with friends and family. 
+5,2019-12-17 07:20:00,1576585200,1099,positive,social,318,"""Being physically active can make daily tasks easier to perform, leaving you with more energy to spend time with friends and family.""","""Being physically active can make daily tasks easier to perform, leaving you with more energy to spend time with friends and family. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-6,2019-12-18 07:38:00,1576672680,1099,19193330062,positive,social,316,"""Every minute you invest in your health is another minute you get to spend with your loved ones!""","""Every minute you invest in your health is another minute you get to spend with your loved ones! 
+6,2019-12-18 07:38:00,1576672680,1099,positive,social,316,"""Every minute you invest in your health is another minute you get to spend with your loved ones!""","""Every minute you invest in your health is another minute you get to spend with your loved ones! 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-7,2019-12-19 08:26:00,1576761960,1099,19193330062,negative,social,403,"""Losing your independence due to poor health will impose an emotional and financial burden on your loved ones to care for you.""","""Losing your independence due to poor health will impose an emotional and financial burden on your loved ones to care for you. 
+7,2019-12-19 08:26:00,1576761960,1099,negative,social,403,"""Losing your independence due to poor health will impose an emotional and financial burden on your loved ones to care for you.""","""Losing your independence due to poor health will impose an emotional and financial burden on your loved ones to care for you. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-8,2019-12-20 08:31:00,1576848660,1099,19193330062,negative,nonsocial,208,"""Inadequate levels of physical activity increase the risk of hypertension, coronary heart disease, stroke, diabetes, cancer, and depression.""","""Inadequate levels of physical activity increase the risk of hypertension, coronary heart disease, stroke, diabetes, cancer, and depression. 
+8,2019-12-20 08:31:00,1576848660,1099,negative,nonsocial,208,"""Inadequate levels of physical activity increase the risk of hypertension, coronary heart disease, stroke, diabetes, cancer, and depression.""","""Inadequate levels of physical activity increase the risk of hypertension, coronary heart disease, stroke, diabetes, cancer, and depression. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-9,2019-12-21 07:21:00,1576930860,1099,19193330062,negative,nonsocial,218,"""If you wait to start exercising until ""tomorrow"", tomorrow can turn into weeks, months or years. There's no time to waste. Every day of sedentary living is dangerous for your heart and shortens your life.""","""If you wait to start exercising until ""tomorrow"", tomorrow can turn into weeks, months or years. There's no time to waste. Every day of sedentary living is dangerous for your heart and shortens your life. 
+9,2019-12-21 07:21:00,1576930860,1099,negative,nonsocial,218,"""If you wait to start exercising until ""tomorrow"", tomorrow can turn into weeks, months or years. There's no time to waste. Every day of sedentary living is dangerous for your heart and shortens your life.""","""If you wait to start exercising until ""tomorrow"", tomorrow can turn into weeks, months or years. There's no time to waste. Every day of sedentary living is dangerous for your heart and shortens your life. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-10,2019-12-22 08:37:00,1577021820,1099,19193330062,positive,social,306,"""Instead of watching TV with family or friends, why not take a walk or jog? Spending less time in front of the TV can strengthen your heart and help you live longer and healthier.""","""Instead of watching TV with family or friends, why not take a walk or jog? Spending less time in front of the TV can strengthen your heart and help you live longer and healthier. 
+10,2019-12-22 08:37:00,1577021820,1099,positive,social,306,"""Instead of watching TV with family or friends, why not take a walk or jog? Spending less time in front of the TV can strengthen your heart and help you live longer and healthier.""","""Instead of watching TV with family or friends, why not take a walk or jog? Spending less time in front of the TV can strengthen your heart and help you live longer and healthier. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-11,2019-12-23 09:22:00,1577110920,1099,19193330062,positive,social,314,"""Invite friends or family to join you on a walk. Even short walks can help relieve stress and strengthen bones and muscles. Plus it's hard to break a commitment to someone else.""","""Invite friends or family to join you on a walk. Even short walks can help relieve stress and strengthen bones and muscles. Plus it's hard to break a commitment to someone else. 
+11,2019-12-23 09:22:00,1577110920,1099,positive,social,314,"""Invite friends or family to join you on a walk. Even short walks can help relieve stress and strengthen bones and muscles. Plus it's hard to break a commitment to someone else.""","""Invite friends or family to join you on a walk. Even short walks can help relieve stress and strengthen bones and muscles. Plus it's hard to break a commitment to someone else. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-12,2019-12-24 08:09:00,1577192940,1099,19193330062,positive,nonsocial,104,"""Even short walks can help relieve stress and strengthen bones and muscles.""","""Even short walks can help relieve stress and strengthen bones and muscles. 
+12,2019-12-24 08:09:00,1577192940,1099,positive,nonsocial,104,"""Even short walks can help relieve stress and strengthen bones and muscles.""","""Even short walks can help relieve stress and strengthen bones and muscles. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-13,2019-12-25 08:25:00,1577280300,1099,19193330062,negative,nonsocial,210,"""Being sedentary can shrink the brain's memory areas over time.""","""Being sedentary can shrink the brain's memory areas over time. 
+13,2019-12-25 08:25:00,1577280300,1099,negative,nonsocial,210,"""Being sedentary can shrink the brain's memory areas over time.""","""Being sedentary can shrink the brain's memory areas over time. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-14,2019-12-26 07:10:00,1577362200,1099,19193330062,positive,nonsocial,109,"""The earlier you invest in your health, the more it will pay off by preventing disease and extending your life.""","""The earlier you invest in your health, the more it will pay off by preventing disease and extending your life. 
+14,2019-12-26 07:10:00,1577362200,1099,positive,nonsocial,109,"""The earlier you invest in your health, the more it will pay off by preventing disease and extending your life.""","""The earlier you invest in your health, the more it will pay off by preventing disease and extending your life. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-15,2019-12-27 09:08:00,1577455680,1099,19193330062,negative,social,417,"""Inactive people tend to live shorter lives. That means they also have less time to spend with the people they care about most.""","""Inactive people tend to live shorter lives. That means they also have less time to spend with the people they care about most. 
+15,2019-12-27 09:08:00,1577455680,1099,negative,social,417,"""Inactive people tend to live shorter lives. That means they also have less time to spend with the people they care about most.""","""Inactive people tend to live shorter lives. That means they also have less time to spend with the people they care about most. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-16,2019-12-28 09:33:00,1577543580,1099,19193330062,positive,nonsocial,108,"""Walking around for just ten minutes provides many physical and psychological benefits, such as stronger muscles and a better mood!""","""Walking around for just ten minutes provides many physical and psychological benefits, such as stronger muscles and a better mood! 
+16,2019-12-28 09:33:00,1577543580,1099,positive,nonsocial,108,"""Walking around for just ten minutes provides many physical and psychological benefits, such as stronger muscles and a better mood!""","""Walking around for just ten minutes provides many physical and psychological benefits, such as stronger muscles and a better mood! 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-17,2019-12-29 08:25:00,1577625900,1099,19193330062,positive,nonsocial,103,"""People sometimes think that an active lifestyle is hard to achieve. Remember that health benefits can come from as little as one hour per week of physical activity. That's less than ten minutes per day to extend your life!""","""People sometimes think that an active lifestyle is hard to achieve. Remember that health benefits can come from as little as one hour per week of physical activity. That's less than ten minutes per day to extend your life! 
+17,2019-12-29 08:25:00,1577625900,1099,positive,nonsocial,103,"""People sometimes think that an active lifestyle is hard to achieve. Remember that health benefits can come from as little as one hour per week of physical activity. That's less than ten minutes per day to extend your life!""","""People sometimes think that an active lifestyle is hard to achieve. Remember that health benefits can come from as little as one hour per week of physical activity. That's less than ten minutes per day to extend your life! 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-18,2019-12-30 09:35:00,1577716500,1099,19193330062,negative,social,406,"""An inactive lifestyle can worsen your memory as you get older. You may later struggle to remember the names and faces of loved ones.""","""An inactive lifestyle can worsen your memory as you get older. You may later struggle to remember the names and faces of loved ones. 
+18,2019-12-30 09:35:00,1577716500,1099,negative,social,406,"""An inactive lifestyle can worsen your memory as you get older. You may later struggle to remember the names and faces of loved ones.""","""An inactive lifestyle can worsen your memory as you get older. You may later struggle to remember the names and faces of loved ones. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-19,2019-12-31 09:01:00,1577800860,1099,19193330062,positive,social,311,"""Physical activity reduces the risk for heart disease and stroke. This means you can live longer and spend more time enjoying your later years with friends and family.""","""Physical activity reduces the risk for heart disease and stroke. This means you can live longer and spend more time enjoying your later years with friends and family. 
+19,2019-12-31 09:01:00,1577800860,1099,positive,social,311,"""Physical activity reduces the risk for heart disease and stroke. This means you can live longer and spend more time enjoying your later years with friends and family.""","""Physical activity reduces the risk for heart disease and stroke. This means you can live longer and spend more time enjoying your later years with friends and family. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-20,2020-01-01 08:22:00,1577884920,1099,19193330062,positive,nonsocial,102,"""As you become more active, your bones will grow stronger. Stronger bones will help you stay pain free.""","""As you become more active, your bones will grow stronger. Stronger bones will help you stay pain free. 
+20,2020-01-01 08:22:00,1577884920,1099,positive,nonsocial,102,"""As you become more active, your bones will grow stronger. Stronger bones will help you stay pain free.""","""As you become more active, your bones will grow stronger. Stronger bones will help you stay pain free. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-21,2020-01-02 08:31:00,1577971860,1099,19193330062,negative,nonsocial,203,"""Lack of physical activity can increase the risks of heart disease, obesity, strokes, diabetes, cancers, and depression.""","""Lack of physical activity can increase the risks of heart disease, obesity, strokes, diabetes, cancers, and depression. 
+21,2020-01-02 08:31:00,1577971860,1099,negative,nonsocial,203,"""Lack of physical activity can increase the risks of heart disease, obesity, strokes, diabetes, cancers, and depression.""","""Lack of physical activity can increase the risks of heart disease, obesity, strokes, diabetes, cancers, and depression. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-22,2020-01-03 08:59:00,1578059940,1099,19193330062,positive,nonsocial,115,"""Being active improves your physical strength, morale, and self-esteem.""","""Being active improves your physical strength, morale, and self-esteem. 
+22,2020-01-03 08:59:00,1578059940,1099,positive,nonsocial,115,"""Being active improves your physical strength, morale, and self-esteem.""","""Being active improves your physical strength, morale, and self-esteem. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-23,2020-01-04 08:04:00,1578143040,1099,19193330062,positive,social,304,"""As you become more active, your bones will grow stronger. Having a support network can help you stay physically active. Be active with friends and family and get stronger together!""","""As you become more active, your bones will grow stronger. Having a support network can help you stay physically active. Be active with friends and family and get stronger together! 
+23,2020-01-04 08:04:00,1578143040,1099,positive,social,304,"""As you become more active, your bones will grow stronger. Having a support network can help you stay physically active. Be active with friends and family and get stronger together!""","""As you become more active, your bones will grow stronger. Having a support network can help you stay physically active. Be active with friends and family and get stronger together! 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-24,2020-01-05 07:02:00,1578225720,1099,19193330062,positive,nonsocial,110,"""To exercise or not to exercise? The answer is simple! Regular exercise helps every part of your body stay healthy, including your muscles, bones, brain, and even your skin.""","""To exercise or not to exercise? The answer is simple! Regular exercise helps every part of your body stay healthy, including your muscles, bones, brain, and even your skin. 
+24,2020-01-05 07:02:00,1578225720,1099,positive,nonsocial,110,"""To exercise or not to exercise? The answer is simple! Regular exercise helps every part of your body stay healthy, including your muscles, bones, brain, and even your skin.""","""To exercise or not to exercise? The answer is simple! Regular exercise helps every part of your body stay healthy, including your muscles, bones, brain, and even your skin. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-25,2020-01-06 08:01:00,1578315660,1099,19193330062,negative,nonsocial,212,"""Sitting in front of a computer for a long time can result in high blood pressure, damaging your health.""","""Sitting in front of a computer for a long time can result in high blood pressure, damaging your health. 
+25,2020-01-06 08:01:00,1578315660,1099,negative,nonsocial,212,"""Sitting in front of a computer for a long time can result in high blood pressure, damaging your health.""","""Sitting in front of a computer for a long time can result in high blood pressure, damaging your health. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-26,2020-01-07 08:25:00,1578403500,1099,19193330062,negative,nonsocial,211,"""Physical inactivity causes conditions like high blood pressure that can lead to heart attack and stroke later in life.""","""Physical inactivity causes conditions like high blood pressure that can lead to heart attack and stroke later in life. 
+26,2020-01-07 08:25:00,1578403500,1099,negative,nonsocial,211,"""Physical inactivity causes conditions like high blood pressure that can lead to heart attack and stroke later in life.""","""Physical inactivity causes conditions like high blood pressure that can lead to heart attack and stroke later in life. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-27,2020-01-08 07:22:00,1578486120,1099,19193330062,positive,social,312,"""Walking improves mood, relieves stress, and strengthens your muscles. When you go out with friends or family, visit places where you can walk around, like a mall, park, or museum.""","""Walking improves mood, relieves stress, and strengthens your muscles. When you go out with friends or family, visit places where you can walk around, like a mall, park, or museum. 
+27,2020-01-08 07:22:00,1578486120,1099,positive,social,312,"""Walking improves mood, relieves stress, and strengthens your muscles. When you go out with friends or family, visit places where you can walk around, like a mall, park, or museum.""","""Walking improves mood, relieves stress, and strengthens your muscles. When you go out with friends or family, visit places where you can walk around, like a mall, park, or museum. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-28,2020-01-09 07:15:00,1578572100,1099,19193330062,positive,nonsocial,119,"""It is never too late to start being active. The instant you start exercising, you will have a clearer mind and increased energy levels.""","""It is never too late to start being active. The instant you start exercising, you will have a clearer mind and increased energy levels. 
+28,2020-01-09 07:15:00,1578572100,1099,positive,nonsocial,119,"""It is never too late to start being active. The instant you start exercising, you will have a clearer mind and increased energy levels.""","""It is never too late to start being active. The instant you start exercising, you will have a clearer mind and increased energy levels. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-29,2020-01-10 07:33:00,1578659580,1099,19193330062,positive,nonsocial,106,"""Regular physical activity will help you live independently for a longer time without needing a wheelchair or other assistance.""","""Regular physical activity will help you live independently for a longer time without needing a wheelchair or other assistance. 
+29,2020-01-10 07:33:00,1578659580,1099,positive,nonsocial,106,"""Regular physical activity will help you live independently for a longer time without needing a wheelchair or other assistance.""","""Regular physical activity will help you live independently for a longer time without needing a wheelchair or other assistance. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-30,2020-01-11 09:36:00,1578753360,1099,19193330062,positive,social,317,"""Regular exercise helps every part of your body stay healthy, including your muscles, bones, brain, and even your skin. If you plan to exercise with a friend, it becomes a commitment you can't skip. This is a great way to motivate both of you to stay active.""","""Regular exercise helps every part of your body stay healthy, including your muscles, bones, brain, and even your skin. If you plan to exercise with a friend, it becomes a commitment you can't skip. This is a great way to motivate both of you to stay active. 
+30,2020-01-11 09:36:00,1578753360,1099,positive,social,317,"""Regular exercise helps every part of your body stay healthy, including your muscles, bones, brain, and even your skin. If you plan to exercise with a friend, it becomes a commitment you can't skip. This is a great way to motivate both of you to stay active.""","""Regular exercise helps every part of your body stay healthy, including your muscles, bones, brain, and even your skin. If you plan to exercise with a friend, it becomes a commitment you can't skip. This is a great way to motivate both of you to stay active. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-31,2020-01-12 08:04:00,1578834240,1099,19193330062,negative,social,404,"""You are more likely to die early if you stay inactive. You will miss out on the people who mean most to you in life.""","""You are more likely to die early if you stay inactive. You will miss out on the people who mean most to you in life. 
+31,2020-01-12 08:04:00,1578834240,1099,negative,social,404,"""You are more likely to die early if you stay inactive. You will miss out on the people who mean most to you in life.""","""You are more likely to die early if you stay inactive. You will miss out on the people who mean most to you in life. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-32,2020-01-13 09:17:00,1578925020,1099,19193330062,positive,nonsocial,114,"""Even a small amount of activity has noticeable benefits for your mood and overall physical health!""","""Even a small amount of activity has noticeable benefits for your mood and overall physical health! 
+32,2020-01-13 09:17:00,1578925020,1099,positive,nonsocial,114,"""Even a small amount of activity has noticeable benefits for your mood and overall physical health!""","""Even a small amount of activity has noticeable benefits for your mood and overall physical health! 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-33,2020-01-14 07:45:00,1579005900,1099,19193330062,negative,nonsocial,215,"""Spending lots of time sitting and watching TV makes you more likely to die from heart disease.""","""Spending lots of time sitting and watching TV makes you more likely to die from heart disease. 
+33,2020-01-14 07:45:00,1579005900,1099,negative,nonsocial,215,"""Spending lots of time sitting and watching TV makes you more likely to die from heart disease.""","""Spending lots of time sitting and watching TV makes you more likely to die from heart disease. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-34,2020-01-15 07:44:00,1579092240,1099,19193330062,negative,social,402,"""Being sedentary can shrink the brain's memory areas with age. Don't let your recollections of loved ones slip away.""","""Being sedentary can shrink the brain's memory areas with age. Don't let your recollections of loved ones slip away. 
+34,2020-01-15 07:44:00,1579092240,1099,negative,social,402,"""Being sedentary can shrink the brain's memory areas with age. Don't let your recollections of loved ones slip away.""","""Being sedentary can shrink the brain's memory areas with age. Don't let your recollections of loved ones slip away. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-35,2020-01-16 07:16:00,1579176960,1099,19193330062,negative,nonsocial,214,"""Avoid long periods of sitting in front of a TV or computer because doing this can hurt your health and contrbute to muscle atrophy.""","""Avoid long periods of sitting in front of a TV or computer because doing this can hurt your health and contrbute to muscle atrophy. 
+35,2020-01-16 07:16:00,1579176960,1099,negative,nonsocial,214,"""Avoid long periods of sitting in front of a TV or computer because doing this can hurt your health and contrbute to muscle atrophy.""","""Avoid long periods of sitting in front of a TV or computer because doing this can hurt your health and contrbute to muscle atrophy. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-36,2020-01-17 07:30:00,1579264200,1099,19193330062,negative,nonsocial,205,"""Too much sitting overall and prolonged periods of sitting can increase the risk of death from cardiovascular disease and cancer.""","""Too much sitting overall and prolonged periods of sitting can increase the risk of death from cardiovascular disease and cancer. 
+36,2020-01-17 07:30:00,1579264200,1099,negative,nonsocial,205,"""Too much sitting overall and prolonged periods of sitting can increase the risk of death from cardiovascular disease and cancer.""","""Too much sitting overall and prolonged periods of sitting can increase the risk of death from cardiovascular disease and cancer. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-37,2020-01-18 09:12:00,1579356720,1099,19193330062,negative,nonsocial,220,"""Inactive people tend to die sooner than active people.""","""Inactive people tend to die sooner than active people. 
+37,2020-01-18 09:12:00,1579356720,1099,negative,nonsocial,220,"""Inactive people tend to die sooner than active people.""","""Inactive people tend to die sooner than active people. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-38,2020-01-19 08:06:00,1579439160,1099,19193330062,positive,nonsocial,111,"""Regular physical activity will help keep your bones and muscles strong and your joints flexible.""","""Regular physical activity will help keep your bones and muscles strong and your joints flexible. 
+38,2020-01-19 08:06:00,1579439160,1099,positive,nonsocial,111,"""Regular physical activity will help keep your bones and muscles strong and your joints flexible.""","""Regular physical activity will help keep your bones and muscles strong and your joints flexible. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-39,2020-01-20 09:44:00,1579531440,1099,19193330062,negative,nonsocial,207,"""Take some time to be more active. You'll wish you had more time later on.""","""Take some time to be more active. You'll wish you had more time later on. 
+39,2020-01-20 09:44:00,1579531440,1099,negative,nonsocial,207,"""Take some time to be more active. You'll wish you had more time later on.""","""Take some time to be more active. You'll wish you had more time later on. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-40,2020-01-21 08:16:00,1579612560,1099,19193330062,positive,social,301,"""Make sure to stay active so that you maintain your ability to walk comfortably. This mobility will help you stay connected with friends and family as you age.""","""Make sure to stay active so that you maintain your ability to walk comfortably. This mobility will help you stay connected with friends and family as you age. 
+40,2020-01-21 08:16:00,1579612560,1099,positive,social,301,"""Make sure to stay active so that you maintain your ability to walk comfortably. This mobility will help you stay connected with friends and family as you age.""","""Make sure to stay active so that you maintain your ability to walk comfortably. This mobility will help you stay connected with friends and family as you age. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-41,2020-01-22 08:21:00,1579699260,1099,19193330062,positive,nonsocial,120,"""Focus on reasons to get up and walk during the day. Walking helps keep your heart and lungs healthy.""","""Focus on reasons to get up and walk during the day. Walking helps keep your heart and lungs healthy. 
+41,2020-01-22 08:21:00,1579699260,1099,positive,nonsocial,120,"""Focus on reasons to get up and walk during the day. Walking helps keep your heart and lungs healthy.""","""Focus on reasons to get up and walk during the day. Walking helps keep your heart and lungs healthy. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-42,2020-01-23 07:45:00,1579783500,1099,19193330062,negative,social,405,"""Sitting in front of a computer or on your phone for a long time can damage your health. Don't let the Internet and phone become your only means of interaction with your friends and family.""","""Sitting in front of a computer or on your phone for a long time can damage your health. Don't let the Internet and phone become your only means of interaction with your friends and family. 
+42,2020-01-23 07:45:00,1579783500,1099,negative,social,405,"""Sitting in front of a computer or on your phone for a long time can damage your health. Don't let the Internet and phone become your only means of interaction with your friends and family.""","""Sitting in front of a computer or on your phone for a long time can damage your health. Don't let the Internet and phone become your only means of interaction with your friends and family. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-43,2020-01-24 07:15:00,1579868100,1099,19193330062,positive,social,320,"""Being active improves your memory, which can help you remember your happiest moments with friends and family.""","""Being active improves your memory, which can help you remember your happiest moments with friends and family. 
+43,2020-01-24 07:15:00,1579868100,1099,positive,social,320,"""Being active improves your memory, which can help you remember your happiest moments with friends and family.""","""Being active improves your memory, which can help you remember your happiest moments with friends and family. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-44,2020-01-25 09:58:00,1579964280,1099,19193330062,negative,social,415,"""If you continue to be sedentary, your bones will weaken faster as you get older. This makes it more difficult to do things you like, such as spending time out with your family.""","""If you continue to be sedentary, your bones will weaken faster as you get older. This makes it more difficult to do things you like, such as spending time out with your family. 
+44,2020-01-25 09:58:00,1579964280,1099,negative,social,415,"""If you continue to be sedentary, your bones will weaken faster as you get older. This makes it more difficult to do things you like, such as spending time out with your family.""","""If you continue to be sedentary, your bones will weaken faster as you get older. This makes it more difficult to do things you like, such as spending time out with your family. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-45,2020-01-26 07:58:00,1580043480,1099,19193330062,positive,social,307,"""Exercise is good for your mind and can also help you stick around longer for the important people in your life. Who are three people you want to stay around to support?""","""Exercise is good for your mind and can also help you stick around longer for the important people in your life. Who are three people you want to stay around to support? 
+45,2020-01-26 07:58:00,1580043480,1099,positive,social,307,"""Exercise is good for your mind and can also help you stick around longer for the important people in your life. Who are three people you want to stay around to support?""","""Exercise is good for your mind and can also help you stick around longer for the important people in your life. Who are three people you want to stay around to support? 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-46,2020-01-27 07:42:00,1580128920,1099,19193330062,negative,social,409,"""Physical inactivity increases the risk of depression and anxiety. Your loved ones want you to be happy as you age.""","""Physical inactivity increases the risk of depression and anxiety. Your loved ones want you to be happy as you age. 
+46,2020-01-27 07:42:00,1580128920,1099,negative,social,409,"""Physical inactivity increases the risk of depression and anxiety. Your loved ones want you to be happy as you age.""","""Physical inactivity increases the risk of depression and anxiety. Your loved ones want you to be happy as you age. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-47,2020-01-28 07:05:00,1580213100,1099,19193330062,positive,nonsocial,116,"""Regular physical activity will give you higher energy levels throughout the day.""","""Regular physical activity will give you higher energy levels throughout the day. 
+47,2020-01-28 07:05:00,1580213100,1099,positive,nonsocial,116,"""Regular physical activity will give you higher energy levels throughout the day.""","""Regular physical activity will give you higher energy levels throughout the day. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-48,2020-01-29 09:25:00,1580307900,1099,19193330062,negative,social,416,"""People who are not physically active at least twice a week have a higher risk of dementia. Think about ways people close to you can help you exercise, and ask them!""","""People who are not physically active at least twice a week have a higher risk of dementia. Think about ways people close to you can help you exercise, and ask them! 
+48,2020-01-29 09:25:00,1580307900,1099,negative,social,416,"""People who are not physically active at least twice a week have a higher risk of dementia. Think about ways people close to you can help you exercise, and ask them!""","""People who are not physically active at least twice a week have a higher risk of dementia. Think about ways people close to you can help you exercise, and ask them! 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-49,2020-01-30 08:03:00,1580389380,1099,19193330062,negative,nonsocial,217,"""Your body will be with you for decades. If you abuse it, you must be prepared for poor health and a lack of energy.""","""Your body will be with you for decades. If you abuse it, you must be prepared for poor health and a lack of energy. 
+49,2020-01-30 08:03:00,1580389380,1099,negative,nonsocial,217,"""Your body will be with you for decades. If you abuse it, you must be prepared for poor health and a lack of energy.""","""Your body will be with you for decades. If you abuse it, you must be prepared for poor health and a lack of energy. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-50,2020-01-31 09:23:00,1580480580,1099,19193330062,negative,social,413,"""Physical inactivity will make you lose independence. A lack of freedom and autonomy can render you unable to contribute to your family and community.""","""Physical inactivity will make you lose independence. A lack of freedom and autonomy can render you unable to contribute to your family and community. 
+50,2020-01-31 09:23:00,1580480580,1099,negative,social,413,"""Physical inactivity will make you lose independence. A lack of freedom and autonomy can render you unable to contribute to your family and community.""","""Physical inactivity will make you lose independence. A lack of freedom and autonomy can render you unable to contribute to your family and community. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-51,2020-02-01 08:06:00,1580562360,1099,19193330062,negative,social,418,"""The ability to walk is a gift. Make sure to stay active so that you will never lose it. Loss of mobility can make it difficult for you to stay connected with friends and family as you age.""","""The ability to walk is a gift. Make sure to stay active so that you will never lose it. Loss of mobility can make it difficult for you to stay connected with friends and family as you age. 
+51,2020-02-01 08:06:00,1580562360,1099,negative,social,418,"""The ability to walk is a gift. Make sure to stay active so that you will never lose it. Loss of mobility can make it difficult for you to stay connected with friends and family as you age.""","""The ability to walk is a gift. Make sure to stay active so that you will never lose it. Loss of mobility can make it difficult for you to stay connected with friends and family as you age. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-52,2020-02-02 09:44:00,1580654640,1099,19193330062,positive,nonsocial,118,"""Regular physical activity can reduce your risk of injury by building and maintaining healthy bones, muscles, and joints.""","""Regular physical activity can reduce your risk of injury by building and maintaining healthy bones, muscles, and joints. 
+52,2020-02-02 09:44:00,1580654640,1099,positive,nonsocial,118,"""Regular physical activity can reduce your risk of injury by building and maintaining healthy bones, muscles, and joints.""","""Regular physical activity can reduce your risk of injury by building and maintaining healthy bones, muscles, and joints. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-53,2020-02-03 07:10:00,1580731800,1099,19193330062,positive,social,303,"""It is never too late to start being active. Being active at any age can lengthen your life and give you more time with loved ones.""","""It is never too late to start being active. Being active at any age can lengthen your life and give you more time with loved ones. 
+53,2020-02-03 07:10:00,1580731800,1099,positive,social,303,"""It is never too late to start being active. Being active at any age can lengthen your life and give you more time with loved ones.""","""It is never too late to start being active. Being active at any age can lengthen your life and give you more time with loved ones. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-54,2020-02-04 09:33:00,1580826780,1099,19193330062,negative,social,411,"""Being sedentary can shrink the brain's memory areas with age. When you go out with friends or family, visit places where you can walk around, like a mall, park, or museum, to stimulate your brain.""","""Being sedentary can shrink the brain's memory areas with age. When you go out with friends or family, visit places where you can walk around, like a mall, park, or museum, to stimulate your brain. 
+54,2020-02-04 09:33:00,1580826780,1099,negative,social,411,"""Being sedentary can shrink the brain's memory areas with age. When you go out with friends or family, visit places where you can walk around, like a mall, park, or museum, to stimulate your brain.""","""Being sedentary can shrink the brain's memory areas with age. When you go out with friends or family, visit places where you can walk around, like a mall, park, or museum, to stimulate your brain. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-55,2020-02-05 07:39:00,1580906340,1099,19193330062,negative,social,410,"""You would feel bad for a loved one that was feeling down about their health. Don't put the people around you in that position. Inactivity can reduce your health and mental sharpness.""","""You would feel bad for a loved one that was feeling down about their health. Don't put the people around you in that position. Inactivity can reduce your health and mental sharpness. 
+55,2020-02-05 07:39:00,1580906340,1099,negative,social,410,"""You would feel bad for a loved one that was feeling down about their health. Don't put the people around you in that position. Inactivity can reduce your health and mental sharpness.""","""You would feel bad for a loved one that was feeling down about their health. Don't put the people around you in that position. Inactivity can reduce your health and mental sharpness. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-56,2020-02-06 09:53:00,1581000780,1099,19193330062,positive,social,309,"""Take some time to be more active. Physical activity at any age helps extend your life. Later you'll appreciate the extra years on your life to spend with family and friends.""","""Take some time to be more active. Physical activity at any age helps extend your life. Later you'll appreciate the extra years on your life to spend with family and friends. 
+56,2020-02-06 09:53:00,1581000780,1099,positive,social,309,"""Take some time to be more active. Physical activity at any age helps extend your life. Later you'll appreciate the extra years on your life to spend with family and friends.""","""Take some time to be more active. Physical activity at any age helps extend your life. Later you'll appreciate the extra years on your life to spend with family and friends. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-57,2020-02-07 07:20:00,1581078000,1099,19193330062,negative,social,412,"""Inactive lifestyle choices like sitting for long periods of time are barriers between you and a long life. Don't voluntarily give up precious time with loved ones by making poor health decisions.""","""Inactive lifestyle choices like sitting for long periods of time are barriers between you and a long life. Don't voluntarily give up precious time with loved ones by making poor health decisions. 
+57,2020-02-07 07:20:00,1581078000,1099,negative,social,412,"""Inactive lifestyle choices like sitting for long periods of time are barriers between you and a long life. Don't voluntarily give up precious time with loved ones by making poor health decisions.""","""Inactive lifestyle choices like sitting for long periods of time are barriers between you and a long life. Don't voluntarily give up precious time with loved ones by making poor health decisions. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-58,2020-02-08 09:36:00,1581172560,1099,19193330062,positive,nonsocial,113,"""Aerobic workouts help maintain strong lungs and a healthy heart. They can be done by a simple jog or walk, yard work, and even dancing!""","""Aerobic workouts help maintain strong lungs and a healthy heart. They can be done by a simple jog or walk, yard work, and even dancing! 
+58,2020-02-08 09:36:00,1581172560,1099,positive,nonsocial,113,"""Aerobic workouts help maintain strong lungs and a healthy heart. They can be done by a simple jog or walk, yard work, and even dancing!""","""Aerobic workouts help maintain strong lungs and a healthy heart. They can be done by a simple jog or walk, yard work, and even dancing! 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-59,2020-02-09 08:18:00,1581254280,1099,19193330062,negative,nonsocial,216,"""You only get one body. If you don't maintain it with exercise, you will live a shorter life and get sick more often as you age.""","""You only get one body. If you don't maintain it with exercise, you will live a shorter life and get sick more often as you age. 
+59,2020-02-09 08:18:00,1581254280,1099,negative,nonsocial,216,"""You only get one body. If you don't maintain it with exercise, you will live a shorter life and get sick more often as you age.""","""You only get one body. If you don't maintain it with exercise, you will live a shorter life and get sick more often as you age. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-60,2020-02-10 07:58:00,1581339480,1099,19193330062,negative,nonsocial,202,"""Physical inactivity can increase the amount of aches and pains you feel as you age.""","""Physical inactivity can increase the amount of aches and pains you feel as you age. 
+60,2020-02-10 07:58:00,1581339480,1099,negative,nonsocial,202,"""Physical inactivity can increase the amount of aches and pains you feel as you age.""","""Physical inactivity can increase the amount of aches and pains you feel as you age. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-61,2020-02-11 08:08:00,1581426480,1099,19193330062,positive,social,315,"""Regular physical activity can help you sleep better, giving you more energy to enjoy quality time with friends and family.""","""Regular physical activity can help you sleep better, giving you more energy to enjoy quality time with friends and family. 
+61,2020-02-11 08:08:00,1581426480,1099,positive,social,315,"""Regular physical activity can help you sleep better, giving you more energy to enjoy quality time with friends and family.""","""Regular physical activity can help you sleep better, giving you more energy to enjoy quality time with friends and family. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-62,2020-02-12 07:29:00,1581510540,1099,19193330062,negative,social,408,"""Every choice you make today can affect your health tomorrow; don't let a sedentary lifestyle shorten your life. Think of all the people you would leave behind.""","""Every choice you make today can affect your health tomorrow; don't let a sedentary lifestyle shorten your life. Think of all the people you would leave behind. 
+62,2020-02-12 07:29:00,1581510540,1099,negative,social,408,"""Every choice you make today can affect your health tomorrow; don't let a sedentary lifestyle shorten your life. Think of all the people you would leave behind.""","""Every choice you make today can affect your health tomorrow; don't let a sedentary lifestyle shorten your life. Think of all the people you would leave behind. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-63,2020-02-13 07:14:00,1581596040,1099,19193330062,negative,social,401,"""Physical inactivity can make daily tasks harder to perform, leaving you with no energy to spend time with friends and family.""","""Physical inactivity can make daily tasks harder to perform, leaving you with no energy to spend time with friends and family. 
+63,2020-02-13 07:14:00,1581596040,1099,negative,social,401,"""Physical inactivity can make daily tasks harder to perform, leaving you with no energy to spend time with friends and family.""","""Physical inactivity can make daily tasks harder to perform, leaving you with no energy to spend time with friends and family. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-64,2020-02-14 08:57:00,1581688620,1099,19193330062,positive,social,310,"""Even a small increase in physical activity can have tangible benefits with regard to your mood and overall health, and it provides a way to spend time with family and friends.""","""Even a small increase in physical activity can have tangible benefits with regard to your mood and overall health, and it provides a way to spend time with family and friends. 
+64,2020-02-14 08:57:00,1581688620,1099,positive,social,310,"""Even a small increase in physical activity can have tangible benefits with regard to your mood and overall health, and it provides a way to spend time with family and friends.""","""Even a small increase in physical activity can have tangible benefits with regard to your mood and overall health, and it provides a way to spend time with family and friends. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-65,2020-02-15 07:48:00,1581770880,1099,19193330062,positive,social,302,"""Physical activity will keep your body healthy, meaning you can maintain your independence as you age. You won't have to rely on help from others to complete daily tasks and bodily functions.""","""Physical activity will keep your body healthy, meaning you can maintain your independence as you age. You won't have to rely on help from others to complete daily tasks and bodily functions. 
+65,2020-02-15 07:48:00,1581770880,1099,positive,social,302,"""Physical activity will keep your body healthy, meaning you can maintain your independence as you age. You won't have to rely on help from others to complete daily tasks and bodily functions.""","""Physical activity will keep your body healthy, meaning you can maintain your independence as you age. You won't have to rely on help from others to complete daily tasks and bodily functions. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-66,2020-02-16 07:51:00,1581857460,1099,19193330062,positive,nonsocial,105,"""Active people tend to live longer than less physically active people. You can live longer and healthier by becoming more active.""","""Active people tend to live longer than less physically active people. You can live longer and healthier by becoming more active. 
+66,2020-02-16 07:51:00,1581857460,1099,positive,nonsocial,105,"""Active people tend to live longer than less physically active people. You can live longer and healthier by becoming more active.""","""Active people tend to live longer than less physically active people. You can live longer and healthier by becoming more active. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-67,2020-02-17 07:07:00,1581941220,1099,19193330062,negative,nonsocial,209,"""Walking is a gift that not everyone is blessed with. Don't give that gift up.""","""Walking is a gift that not everyone is blessed with. Don't give that gift up. 
+67,2020-02-17 07:07:00,1581941220,1099,negative,nonsocial,209,"""Walking is a gift that not everyone is blessed with. Don't give that gift up.""","""Walking is a gift that not everyone is blessed with. Don't give that gift up. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-68,2020-02-18 09:17:00,1582035420,1099,19193330062,negative,social,419,"""A lack of activity will decrease your stamina and weaken muscles. Eventually, you'll miss social outings with friends and family.""","""A lack of activity will decrease your stamina and weaken muscles. Eventually, you'll miss social outings with friends and family. 
+68,2020-02-18 09:17:00,1582035420,1099,negative,social,419,"""A lack of activity will decrease your stamina and weaken muscles. Eventually, you'll miss social outings with friends and family.""","""A lack of activity will decrease your stamina and weaken muscles. Eventually, you'll miss social outings with friends and family. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-69,2020-02-19 07:07:00,1582114020,1099,19193330062,negative,social,407,"""A lack of physical activity can increase the risk of dementia. Not being able to remember your loved ones or moving to a nursing home will be emotionally and financially difficult for your family.""","""A lack of physical activity can increase the risk of dementia. Not being able to remember your loved ones or moving to a nursing home will be emotionally and financially difficult for your family. 
+69,2020-02-19 07:07:00,1582114020,1099,negative,social,407,"""A lack of physical activity can increase the risk of dementia. Not being able to remember your loved ones or moving to a nursing home will be emotionally and financially difficult for your family.""","""A lack of physical activity can increase the risk of dementia. Not being able to remember your loved ones or moving to a nursing home will be emotionally and financially difficult for your family. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-70,2020-02-20 09:15:00,1582208100,1099,19193330062,negative,nonsocial,213,"""Weak muscles make it difficult for you to get around and do the things you enjoy.""","""Weak muscles make it difficult for you to get around and do the things you enjoy. 
+70,2020-02-20 09:15:00,1582208100,1099,negative,nonsocial,213,"""Weak muscles make it difficult for you to get around and do the things you enjoy.""","""Weak muscles make it difficult for you to get around and do the things you enjoy. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-71,2020-02-21 09:45:00,1582296300,1099,19193330062,negative,nonsocial,204,"""If you continue sitting most of the time, your muscles will become weak.""","""If you continue sitting most of the time, your muscles will become weak. 
+71,2020-02-21 09:45:00,1582296300,1099,negative,nonsocial,204,"""If you continue sitting most of the time, your muscles will become weak.""","""If you continue sitting most of the time, your muscles will become weak. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-72,2020-02-22 09:43:00,1582382580,1099,19193330062,negative,nonsocial,219,"""A lack of exercise robs the body of its essential ingredients! You need exercise to maintain energy levels, to sleep well, and to live a long life.""","""A lack of exercise robs the body of its essential ingredients! You need exercise to maintain energy levels, to sleep well, and to live a long life. 
+72,2020-02-22 09:43:00,1582382580,1099,negative,nonsocial,219,"""A lack of exercise robs the body of its essential ingredients! You need exercise to maintain energy levels, to sleep well, and to live a long life.""","""A lack of exercise robs the body of its essential ingredients! You need exercise to maintain energy levels, to sleep well, and to live a long life. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-73,2020-02-23 08:18:00,1582463880,1099,19193330062,positive,social,308,"""Walking helps keep your heart and lungs healthy. Set aside some time to just walk around. You can invite your family and friends to join in as well.""","""Walking helps keep your heart and lungs healthy. Set aside some time to just walk around. You can invite your family and friends to join in as well. 
+73,2020-02-23 08:18:00,1582463880,1099,positive,social,308,"""Walking helps keep your heart and lungs healthy. Set aside some time to just walk around. You can invite your family and friends to join in as well.""","""Walking helps keep your heart and lungs healthy. Set aside some time to just walk around. You can invite your family and friends to join in as well. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-74,2020-02-24 09:04:00,1582553040,1099,19193330062,positive,nonsocial,107,"""Physical activity may enhance your balance and make you less likely to experience a fall.""","""Physical activity may enhance your balance and make you less likely to experience a fall. 
+74,2020-02-24 09:04:00,1582553040,1099,positive,nonsocial,107,"""Physical activity may enhance your balance and make you less likely to experience a fall.""","""Physical activity may enhance your balance and make you less likely to experience a fall. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-75,2020-02-25 07:23:00,1582633380,1099,19193330062,negative,social,414,"""A weak body increases your risk for more severe diseases. You will miss out on fun moments with your loved ones later on.""","""A weak body increases your risk for more severe diseases. You will miss out on fun moments with your loved ones later on. 
+75,2020-02-25 07:23:00,1582633380,1099,negative,social,414,"""A weak body increases your risk for more severe diseases. You will miss out on fun moments with your loved ones later on.""","""A weak body increases your risk for more severe diseases. You will miss out on fun moments with your loved ones later on. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-76,2020-02-26 07:44:00,1582721040,1099,19193330062,negative,nonsocial,201,"""People who are insufficiently active have a 20% to 30% increased risk of death compared to people who are sufficiently active.""","""People who are insufficiently active have a 20% to 30% increased risk of death compared to people who are sufficiently active. 
+76,2020-02-26 07:44:00,1582721040,1099,negative,nonsocial,201,"""People who are insufficiently active have a 20% to 30% increased risk of death compared to people who are sufficiently active.""","""People who are insufficiently active have a 20% to 30% increased risk of death compared to people who are sufficiently active. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-77,2020-02-27 08:16:00,1582809360,1099,19193330062,positive,nonsocial,101,"""It is never too late to start taking care of the body you have. You can start lengthening your life and preventing aches and pains from day one!""","""It is never too late to start taking care of the body you have. You can start lengthening your life and preventing aches and pains from day one! 
+77,2020-02-27 08:16:00,1582809360,1099,positive,nonsocial,101,"""It is never too late to start taking care of the body you have. You can start lengthening your life and preventing aches and pains from day one!""","""It is never too late to start taking care of the body you have. You can start lengthening your life and preventing aches and pains from day one! 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-78,2020-02-28 07:06:00,1582891560,1099,19193330062,positive,nonsocial,112,"""Not only does exercise keep the body young, but it also keeps the mind sharp and promotes emotional well-being.""","""Not only does exercise keep the body young, but it also keeps the mind sharp and promotes emotional well-being. 
+78,2020-02-28 07:06:00,1582891560,1099,positive,nonsocial,112,"""Not only does exercise keep the body young, but it also keeps the mind sharp and promotes emotional well-being.""","""Not only does exercise keep the body young, but it also keeps the mind sharp and promotes emotional well-being. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
-79,2020-02-29 09:37:00,1582987020,1099,19193330062,positive,social,313,"""You can live longer and enjoy the things you love if you sit less. You will spend more time with the people you love.""","""You can live longer and enjoy the things you love if you sit less. You will spend more time with the people you love. 
+79,2020-02-29 09:37:00,1582987020,1099,positive,social,313,"""You can live longer and enjoy the things you love if you sit less. You will spend more time with the people you love.""","""You can live longer and enjoy the things you love if you sit less. You will spend more time with the people you love. 
 
 Click link to complete the survey: https://redcap.duke.edu/redcap/surveys/?s=3FRPDWX48P"""
