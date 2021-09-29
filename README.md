@@ -1,4 +1,4 @@
-# Using Neuroscience to Optimize Digital Health Interventions across Adulthood (2018-present)
+# Using Neuroscience to Optimize Digital Health Interventions across Adulthood
 
 ## Background
 Most people know that being more physically active is good for them, but many still don’t do it. While clinical trials have demonstrated the efficacy of exercise programs for enhancing cognition and well-being in older age, a persistent challenge is how to motivate aging adults to engage in physical activity in their daily lives. Recent neuroscientific and psychological research shows that motivation changes with age. Older adults are more motivated by social rewards and pay more attention to and better remember positively-framed messages relative to negatively-framed ones. Thus, positively-framed social rewards may provide critical incentives for aging adults to engage in physical activity.
@@ -16,4 +16,4 @@ Fall 2019: Initial in-lab cognitive batter, health assessment and MRI scanning; 
 
 Spring 2020: Complete follow-up visits for cognitive batter and health assessment; begin behavioral and MRI data quality checking and preprocessing; begin data processing and analysis
 
-Fall 2020 - Spring 2021: Finish data processing and analysis; draft reports for conference presentations; draft manuscripts; post data and stimuli online as public resources
+Fall 2020 - Spring 2021: Finish data processing and analysis; draft reports and manuscripts
