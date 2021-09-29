@@ -11,7 +11,7 @@ The project will test the hypothesis that positively-framed social rewards will 
 ## Anticipated Outcomes
 Publication of findings; data, code and experimental stimuli made publicly available through OSF; application for large multidisciplinary federal grant; development of a personalized mobile digital physical activity promotion program that can target aging adults across diverse communities in the local geographical area and beyond
 
-## Recent Progress
+## Progress
 Fall 2019: Initial in-lab cognitive batter, health assessment and MRI scanning; 3-month activity monitoring
 
 Spring 2020: Complete follow-up visits for cognitive batter and health assessment; begin behavioral and MRI data quality checking and preprocessing; begin data processing and analysis
